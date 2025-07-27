@@ -17,7 +17,7 @@
 npm install -g claude-agents-power
 
 # Automatically configure Claude Desktop (NEW! 🎉)
-claude-agents-power-install
+claude-agents-setup
 ```
 
 **Or manually configure Claude Desktop:**

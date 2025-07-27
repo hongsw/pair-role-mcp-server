@@ -1,7 +1,7 @@
 # 🤖 Pair-Role MCP Server
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
-[![한국어](https://img.shields.io/badge/lang-한국어-red.svg)](README.ko.md)
+[![한국어](https://img.shields.io/badge/lang-한국어-red.svg)](README.kr.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.org/)

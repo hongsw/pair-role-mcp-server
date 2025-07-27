@@ -129,7 +129,7 @@ const TRANSPORT_TYPE = 'stdio';
 // Function to create a new server instance with all tools registered
 function createServerInstance() {
     const server = new Server({
-        name: 'pair-role-mcp-server',
+        name: 'claude-agents-power-mcp-server',
         version: '1.0.0',
     }, {
         capabilities: {

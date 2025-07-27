@@ -17,7 +17,7 @@
 npm install -g claude-agents-power
 
 # Claude Desktop 자동 구성 (NEW! 🎉)
-claude-agents-setup
+claude-agents-power --install
 ```
 
 **또는 수동으로 Claude Desktop 구성:**

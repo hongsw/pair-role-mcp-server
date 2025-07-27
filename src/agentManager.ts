@@ -77,7 +77,7 @@ export class AgentManager {
   private async loadAgent(filePath: string, language: string = 'en'): Promise<Agent | null> {
     try {
       const content = await fs.readFile(filePath, 'utf-8');
-      const lines = content.split('\\n');
+      const lines = content.split('\n');
       
       // Find YAML frontmatter
       let inFrontmatter = false;
@@ -102,13 +102,13 @@ export class AgentManager {
         return null;
       }
 
-      const frontmatter = yaml.load(frontmatterLines.join('\\n')) as any;
+      const frontmatter = yaml.load(frontmatterLines.join('\n')) as any;
       
       return {
         name: frontmatter.name,
         description: frontmatter.description,
         tools: frontmatter.tools.split(', '),
-        content: contentLines.join('\\n'),
+        content: contentLines.join('\n'),
         language
       };
     } catch (e) {
@@ -151,7 +151,7 @@ export class AgentManager {
   }
 
   async installAgent(agent: Agent, targetPath: string): Promise<string> {
-    const subAgentsDir = path.join(targetPath, '.claude', 'sub-agents');
+    const subAgentsDir = path.join(targetPath, 'claude', 'agents');
     await fs.mkdir(subAgentsDir, { recursive: true });
     
     const agentPath = path.join(subAgentsDir, `${agent.name}.md`);

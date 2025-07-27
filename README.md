@@ -49,6 +49,7 @@
 - Automatic agent downloading from [baryonlabs/claude-sub-agent-contents](https://github.com/baryonlabs/claude-sub-agent-contents)
 - Download tracking and usage analytics
 - Offline caching for downloaded agents
+- Installs to `./claude/agents/` directory structure
 - No need to create agent templates from scratch
 
 ## 🚀 Quick Start

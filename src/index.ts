@@ -68,8 +68,8 @@ function createServerInstance() {
 // Support both development and production paths
 const isDevelopment = process.env.NODE_ENV === 'development';
 const agentsPath = isDevelopment 
-  ? path.join(__dirname, '../../sub-agents')
-  : path.resolve(process.cwd(), 'sub-agents');
+  ? path.join(__dirname, '../../claude/agents')
+  : path.resolve(process.cwd(), 'claude/agents');
 
 debug(`Current working directory: ${process.cwd()}`);
 debug(`__dirname: ${__dirname}`);
@@ -91,7 +91,7 @@ const agentManager = new AgentManager(agentsPath, {
   owner: 'baryonlabs',
   repo: 'claude-sub-agent-contents',
   branch: 'main',
-  path: 'sub-agents'
+  path: 'claude/agents'
 }, cliOptions.debug || false);
 
 // Function to setup tools for a server instance
@@ -397,7 +397,7 @@ function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManag
                 success: true,
                 installedCount: installedPaths.length,
                 installedPaths,
-                message: `Successfully installed ${installedPaths.length} agents to ${targetPath}/.claude/sub-agents/`,
+                message: `Successfully installed ${installedPaths.length} agents to ${targetPath}/claude/agents/`,
               }, null, 2),
             },
           ],
@@ -434,6 +434,56 @@ function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManag
           },
         ],
       };
+    }
+
+    case 'get-download-stats': {
+      const { limit = 10 } = args as { limit?: number };
+      const stats = agentManager.getMostDownloadedAgents(limit);
+      
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              success: true,
+              stats,
+              message: `Top ${limit} most downloaded agents`,
+            }, null, 2),
+          },
+        ],
+      };
+    }
+
+    case 'refresh-agents': {
+      try {
+        await agentManager.refreshAgentsFromGitHub();
+        const agents = agentManager.getAllAgents();
+        
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                success: true,
+                count: agents.length,
+                message: `Successfully refreshed agents from GitHub. Total agents: ${agents.length}`,
+              }, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                success: false,
+                error: `Failed to refresh agents: ${error}`,
+              }, null, 2),
+            },
+          ],
+        };
+      }
     }
 
     default:

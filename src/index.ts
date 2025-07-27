@@ -236,8 +236,8 @@ function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManag
             },
             language: {
               type: 'string',
-              description: 'Language preference (en, kr)',
-              enum: ['en', 'kr'],
+              description: 'Language preference (en, ko)',
+              enum: ['en', 'ko'],
               default: 'en',
             },
           },
@@ -252,8 +252,8 @@ function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManag
           properties: {
             language: {
               type: 'string',
-              description: 'Language preference (en, kr)',
-              enum: ['en', 'kr'],
+              description: 'Language preference (en, ko)',
+              enum: ['en', 'ko'],
               default: 'en',
             },
             category: {
@@ -276,8 +276,8 @@ function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManag
             },
             language: {
               type: 'string',
-              description: 'Language preference (en, kr)',
-              enum: ['en', 'kr'],
+              description: 'Language preference (en, ko)',
+              enum: ['en', 'ko'],
               default: 'en',
             },
           },
@@ -303,8 +303,8 @@ function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManag
             },
             language: {
               type: 'string',
-              description: 'Language preference for agents (en, kr)',
-              enum: ['en', 'kr'],
+              description: 'Language preference for agents (en, ko)',
+              enum: ['en', 'ko'],
               default: 'en',
             },
           },

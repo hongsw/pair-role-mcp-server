@@ -165,81 +165,81 @@ mcp__claude-agents-power__install-agents ["frontend-developer", "backend-develop
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**소프트웨어 엔지니어**](claude/agents/kr/software-engineer.md) | [EN](claude/agents/en/software-engineer.md) | [KO](claude/agents/kr/software-engineer.md) | `Bash, Read, Write, Edit` | 풀스택 개발, 시스템 설계 |
-| [**프론트엔드 개발자**](claude/agents/kr/frontend-developer.md) | [EN](claude/agents/en/frontend-developer.md) | [KO](claude/agents/kr/frontend-developer.md) | `Read, Write, Edit, Bash` | React, Vue, Angular, UI/UX |
-| [**백엔드 개발자**](claude/agents/kr/backend-engineer.md) | [EN](claude/agents/en/backend-engineer.md) | [KO](claude/agents/kr/backend-engineer.md) | `Bash, Read, Write, Edit` | API, 데이터베이스, 서버 아키텍처 |
-| [**DevOps 엔지니어**](claude/agents/kr/devops-engineer.md) | [EN](claude/agents/en/devops-engineer.md) | [KO](claude/agents/kr/devops-engineer.md) | `Bash, Read, Write` | CI/CD, 인프라 자동화 |
-| [**데이터 엔지니어**](claude/agents/kr/data-engineer.md) | [EN](claude/agents/en/data-engineer.md) | [KO](claude/agents/kr/data-engineer.md) | `Bash, Read, Write` | ETL 파이프라인, 데이터 아키텍처 |
+| [**소프트웨어 엔지니어**](claude/agents/ko/software-engineer.md) | [EN](claude/agents/en/software-engineer.md) | [KO](claude/agents/ko/software-engineer.md) | `Bash, Read, Write, Edit` | 풀스택 개발, 시스템 설계 |
+| [**프론트엔드 개발자**](claude/agents/ko/frontend-developer.md) | [EN](claude/agents/en/frontend-developer.md) | [KO](claude/agents/ko/frontend-developer.md) | `Read, Write, Edit, Bash` | React, Vue, Angular, UI/UX |
+| [**백엔드 개발자**](claude/agents/ko/backend-engineer.md) | [EN](claude/agents/en/backend-engineer.md) | [KO](claude/agents/ko/backend-engineer.md) | `Bash, Read, Write, Edit` | API, 데이터베이스, 서버 아키텍처 |
+| [**DevOps 엔지니어**](claude/agents/ko/devops-engineer.md) | [EN](claude/agents/en/devops-engineer.md) | [KO](claude/agents/ko/devops-engineer.md) | `Bash, Read, Write` | CI/CD, 인프라 자동화 |
+| [**데이터 엔지니어**](claude/agents/ko/data-engineer.md) | [EN](claude/agents/en/data-engineer.md) | [KO](claude/agents/ko/data-engineer.md) | `Bash, Read, Write` | ETL 파이프라인, 데이터 아키텍처 |
 
 ### 📊 데이터 및 분석 (15개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**데이터 사이언티스트**](claude/agents/kr/data-scientist.md) | [EN](claude/agents/en/data-scientist.md) | [KO](claude/agents/kr/data-scientist.md) | `Bash, Read, Write` | ML 모델링, 통계 분석 |
-| [**데이터 분석가**](claude/agents/kr/data-analyst.md) | [EN](claude/agents/en/data-analyst.md) | [KO](claude/agents/kr/data-analyst.md) | `Read, Write, Bash` | 비즈니스 인사이트, 리포팅 |
-| [**BI 개발자**](claude/agents/kr/bi-developer.md) | [EN](claude/agents/en/bi-developer.md) | [KO](claude/agents/kr/bi-developer.md) | `Read, Write, Bash` | 대시보드, BI 도구 |
-| [**비즈니스 분석가**](claude/agents/kr/business-analyst.md) | [EN](claude/agents/en/business-analyst.md) | [KO](claude/agents/kr/business-analyst.md) | `Read, Write` | 시장 조사, 경쟁 분석 |
-| [**리서치 사이언티스트**](claude/agents/kr/research-scientist.md) | [EN](claude/agents/en/research-scientist.md) | [KO](claude/agents/kr/research-scientist.md) | `Read, Write` | 시장 조사, 경쟁 분석 |
+| [**데이터 사이언티스트**](claude/agents/ko/data-scientist.md) | [EN](claude/agents/en/data-scientist.md) | [KO](claude/agents/ko/data-scientist.md) | `Bash, Read, Write` | ML 모델링, 통계 분석 |
+| [**데이터 분석가**](claude/agents/ko/data-analyst.md) | [EN](claude/agents/en/data-analyst.md) | [KO](claude/agents/ko/data-analyst.md) | `Read, Write, Bash` | 비즈니스 인사이트, 리포팅 |
+| [**BI 개발자**](claude/agents/ko/bi-developer.md) | [EN](claude/agents/en/bi-developer.md) | [KO](claude/agents/ko/bi-developer.md) | `Read, Write, Bash` | 대시보드, BI 도구 |
+| [**비즈니스 분석가**](claude/agents/ko/business-analyst.md) | [EN](claude/agents/en/business-analyst.md) | [KO](claude/agents/ko/business-analyst.md) | `Read, Write` | 시장 조사, 경쟁 분석 |
+| [**리서치 사이언티스트**](claude/agents/ko/research-scientist.md) | [EN](claude/agents/en/research-scientist.md) | [KO](claude/agents/ko/research-scientist.md) | `Read, Write` | 시장 조사, 경쟁 분석 |
 
 ### 🎨 제품 및 디자인 (10개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**제품 매니저**](claude/agents/kr/product-manager.md) | [EN](claude/agents/en/product-manager.md) | [KO](claude/agents/kr/product-manager.md) | `Read, Write` | 제품 전략, 로드맵 |
-| [**제품 디자이너**](claude/agents/kr/product-designer.md) | [EN](claude/agents/en/product-designer.md) | [KO](claude/agents/kr/product-designer.md) | `Read, Write` | 사용자 경험, 제품 디자인 |
-| [**UX 디자이너**](claude/agents/kr/ux-designer.md) | [EN](claude/agents/en/ux-designer.md) | [KO](claude/agents/kr/ux-designer.md) | `Read, Write` | 사용자 리서치, 와이어프레임 |
-| [**UI 디자이너**](claude/agents/kr/ui-designer.md) | [EN](claude/agents/en/ui-designer.md) | [KO](claude/agents/kr/ui-designer.md) | `Read, Write` | 비주얼 디자인, 프로토타입 |
-| [**그래픽 디자이너**](claude/agents/kr/graphic-designer.md) | [EN](claude/agents/en/graphic-designer.md) | [KO](claude/agents/kr/graphic-designer.md) | `Read, Write` | 브랜드 아이덴티티, 비주얼 에셋 |
+| [**제품 매니저**](claude/agents/ko/product-manager.md) | [EN](claude/agents/en/product-manager.md) | [KO](claude/agents/ko/product-manager.md) | `Read, Write` | 제품 전략, 로드맵 |
+| [**제품 디자이너**](claude/agents/ko/product-designer.md) | [EN](claude/agents/en/product-designer.md) | [KO](claude/agents/ko/product-designer.md) | `Read, Write` | 사용자 경험, 제품 디자인 |
+| [**UX 디자이너**](claude/agents/ko/ux-designer.md) | [EN](claude/agents/en/ux-designer.md) | [KO](claude/agents/ko/ux-designer.md) | `Read, Write` | 사용자 리서치, 와이어프레임 |
+| [**UI 디자이너**](claude/agents/ko/ui-designer.md) | [EN](claude/agents/en/ui-designer.md) | [KO](claude/agents/ko/ui-designer.md) | `Read, Write` | 비주얼 디자인, 프로토타입 |
+| [**그래픽 디자이너**](claude/agents/ko/graphic-designer.md) | [EN](claude/agents/en/graphic-designer.md) | [KO](claude/agents/ko/graphic-designer.md) | `Read, Write` | 브랜드 아이덴티티, 비주얼 에셋 |
 
 ### 📈 마케팅 및 영업 (10개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**마케팅 매니저**](claude/agents/kr/marketing-analyst.md) | [EN](claude/agents/en/marketing-analyst.md) | [KO](claude/agents/kr/marketing-analyst.md) | `Read, Write` | 마케팅 전략, 캠페인 |
-| [**영업 매니저**](claude/agents/kr/sales-manager.md) | [EN](claude/agents/en/sales-manager.md) | [KO](claude/agents/kr/sales-manager.md) | `Read, Write` | 영업 전략, 팀 관리 |
-| [**디지털 마케터**](claude/agents/kr/digital-marketer.md) | [EN](claude/agents/en/digital-marketer.md) | [KO](claude/agents/kr/digital-marketer.md) | `Read, Write` | 온라인 광고, SEO/SEM |
-| [**콘텐츠 크리에이터**](claude/agents/kr/content-creator.md) | [EN](claude/agents/en/content-creator.md) | [KO](claude/agents/kr/content-creator.md) | `Read, Write` | 콘텐츠 전략, 제작 |
-| [**소셜미디어 매니저**](claude/agents/kr/social-media-manager.md) | [EN](claude/agents/en/social-media-manager.md) | [KO](claude/agents/kr/social-media-manager.md) | `Read, Write` | 소셜미디어 전략, 커뮤니티 |
+| [**마케팅 매니저**](claude/agents/ko/marketing-analyst.md) | [EN](claude/agents/en/marketing-analyst.md) | [KO](claude/agents/ko/marketing-analyst.md) | `Read, Write` | 마케팅 전략, 캠페인 |
+| [**영업 매니저**](claude/agents/ko/sales-manager.md) | [EN](claude/agents/en/sales-manager.md) | [KO](claude/agents/ko/sales-manager.md) | `Read, Write` | 영업 전략, 팀 관리 |
+| [**디지털 마케터**](claude/agents/ko/digital-marketer.md) | [EN](claude/agents/en/digital-marketer.md) | [KO](claude/agents/ko/digital-marketer.md) | `Read, Write` | 온라인 광고, SEO/SEM |
+| [**콘텐츠 크리에이터**](claude/agents/ko/content-creator.md) | [EN](claude/agents/en/content-creator.md) | [KO](claude/agents/ko/content-creator.md) | `Read, Write` | 콘텐츠 전략, 제작 |
+| [**소셜미디어 매니저**](claude/agents/ko/social-media-manager.md) | [EN](claude/agents/en/social-media-manager.md) | [KO](claude/agents/ko/social-media-manager.md) | `Read, Write` | 소셜미디어 전략, 커뮤니티 |
 
 ### ⚙️ 운영 및 관리 (15개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**운영 매니저**](claude/agents/kr/operations-manager.md) | [EN](claude/agents/en/operations-manager.md) | [KO](claude/agents/kr/operations-manager.md) | `Read, Write, Bash` | 프로세스 최적화, 효율성 |
-| [**프로젝트 매니저**](claude/agents/kr/project-manager.md) | [EN](claude/agents/en/project-manager.md) | [KO](claude/agents/kr/project-manager.md) | `Read, Write` | 프로젝트 계획, 조정 |
-| [**프로그램 매니저**](claude/agents/kr/technical-pm.md) | [EN](claude/agents/en/technical-pm.md) | [KO](claude/agents/kr/technical-pm.md) | `Read, Write` | 다중 프로젝트 조정 |
-| [**공급망 매니저**](claude/agents/kr/supply-chain-manager.md) | [EN](claude/agents/en/supply-chain-manager.md) | [KO](claude/agents/kr/supply-chain-manager.md) | `Read, Write` | 공급망 최적화 |
-| [**품질 보증 매니저**](claude/agents/kr/qa-engineer.md) | [EN](claude/agents/en/qa-engineer.md) | [KO](claude/agents/kr/qa-engineer.md) | `Read, Write, Bash` | 품질 프로세스, 개선 |
+| [**운영 매니저**](claude/agents/ko/operations-manager.md) | [EN](claude/agents/en/operations-manager.md) | [KO](claude/agents/ko/operations-manager.md) | `Read, Write, Bash` | 프로세스 최적화, 효율성 |
+| [**프로젝트 매니저**](claude/agents/ko/project-manager.md) | [EN](claude/agents/en/project-manager.md) | [KO](claude/agents/ko/project-manager.md) | `Read, Write` | 프로젝트 계획, 조정 |
+| [**프로그램 매니저**](claude/agents/ko/technical-pm.md) | [EN](claude/agents/en/technical-pm.md) | [KO](claude/agents/ko/technical-pm.md) | `Read, Write` | 다중 프로젝트 조정 |
+| [**공급망 매니저**](claude/agents/ko/supply-chain-manager.md) | [EN](claude/agents/en/supply-chain-manager.md) | [KO](claude/agents/ko/supply-chain-manager.md) | `Read, Write` | 공급망 최적화 |
+| [**품질 보증 매니저**](claude/agents/ko/qa-engineer.md) | [EN](claude/agents/en/qa-engineer.md) | [KO](claude/agents/ko/qa-engineer.md) | `Read, Write, Bash` | 품질 프로세스, 개선 |
 
 ### 💰 재무 및 회계 (10개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**최고재무책임자**](claude/agents/kr/accountant.md) | [EN](claude/agents/en/accountant.md) | [KO](claude/agents/kr/accountant.md) | `Read, Write` | 재무 전략, 기업 재무 |
-| [**재무 컨트롤러**](claude/agents/kr/controller.md) | [EN](claude/agents/en/controller.md) | [KO](claude/agents/kr/controller.md) | `Read, Write` | 재무 통제, 보고 |
-| [**회계 매니저**](claude/agents/kr/accountant.md) | [EN](claude/agents/en/accountant.md) | [KO](claude/agents/kr/accountant.md) | `Read, Write` | 회계 운영 |
-| [**자금 매니저**](claude/agents/kr/treasury-manager.md) | [EN](claude/agents/en/treasury-manager.md) | [KO](claude/agents/kr/treasury-manager.md) | `Read, Write` | 현금 관리, 자금 |
-| [**재무 분석가**](claude/agents/kr/financial-analyst.md) | [EN](claude/agents/en/financial-analyst.md) | [KO](claude/agents/kr/financial-analyst.md) | `Read, Write` | 세금 전략, 컴플라이언스 |
+| [**최고재무책임자**](claude/agents/ko/accountant.md) | [EN](claude/agents/en/accountant.md) | [KO](claude/agents/ko/accountant.md) | `Read, Write` | 재무 전략, 기업 재무 |
+| [**재무 컨트롤러**](claude/agents/ko/controller.md) | [EN](claude/agents/en/controller.md) | [KO](claude/agents/ko/controller.md) | `Read, Write` | 재무 통제, 보고 |
+| [**회계 매니저**](claude/agents/ko/accountant.md) | [EN](claude/agents/en/accountant.md) | [KO](claude/agents/ko/accountant.md) | `Read, Write` | 회계 운영 |
+| [**자금 매니저**](claude/agents/ko/treasury-manager.md) | [EN](claude/agents/en/treasury-manager.md) | [KO](claude/agents/ko/treasury-manager.md) | `Read, Write` | 현금 관리, 자금 |
+| [**재무 분석가**](claude/agents/ko/financial-analyst.md) | [EN](claude/agents/en/financial-analyst.md) | [KO](claude/agents/ko/financial-analyst.md) | `Read, Write` | 세금 전략, 컴플라이언스 |
 
 ### 👥 인사 (10개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**HR 매니저**](claude/agents/kr/hr-manager.md) | [EN](claude/agents/en/hr-manager.md) | [KO](claude/agents/kr/hr-manager.md) | `Read, Write` | HR 전략, 인사 관리 |
-| [**인재 확보 전문가**](claude/agents/kr/talent-acquisition.md) | [EN](claude/agents/en/talent-acquisition.md) | [KO](claude/agents/kr/talent-acquisition.md) | `Read, Write` | 채용, 인재 소싱 |
-| [**HR 비즈니스 파트너**](claude/agents/kr/learning-development.md) | [EN](claude/agents/en/learning-development.md) | [KO](claude/agents/kr/learning-development.md) | `Read, Write` | 전략적 HR, 비즈니스 정렬 |
-| [**보상 및 복리후생 매니저**](claude/agents/kr/compensation-benefits.md) | [EN](claude/agents/en/compensation-benefits.md) | [KO](claude/agents/kr/compensation-benefits.md) | `Read, Write` | 보상 설계, 복리후생 |
-| [**학습 및 개발 매니저**](claude/agents/kr/learning-development.md) | [EN](claude/agents/en/learning-development.md) | [KO](claude/agents/kr/learning-development.md) | `Read, Write` | 교육 프로그램, 개발 |
+| [**HR 매니저**](claude/agents/ko/hr-manager.md) | [EN](claude/agents/en/hr-manager.md) | [KO](claude/agents/ko/hr-manager.md) | `Read, Write` | HR 전략, 인사 관리 |
+| [**인재 확보 전문가**](claude/agents/ko/talent-acquisition.md) | [EN](claude/agents/en/talent-acquisition.md) | [KO](claude/agents/ko/talent-acquisition.md) | `Read, Write` | 채용, 인재 소싱 |
+| [**HR 비즈니스 파트너**](claude/agents/ko/learning-development.md) | [EN](claude/agents/en/learning-development.md) | [KO](claude/agents/ko/learning-development.md) | `Read, Write` | 전략적 HR, 비즈니스 정렬 |
+| [**보상 및 복리후생 매니저**](claude/agents/ko/compensation-benefits.md) | [EN](claude/agents/en/compensation-benefits.md) | [KO](claude/agents/ko/compensation-benefits.md) | `Read, Write` | 보상 설계, 복리후생 |
+| [**학습 및 개발 매니저**](claude/agents/ko/learning-development.md) | [EN](claude/agents/en/learning-development.md) | [KO](claude/agents/ko/learning-development.md) | `Read, Write` | 교육 프로그램, 개발 |
 
 ### 🏢 임원 및 리더십 (10개 역할)
 
 | 역할 | English | 한국어 | 도구 | 전문 분야 |
 |------|---------|--------|-------|------------|
-| [**최고경영자**](claude/agents/kr/executive-assistant.md) | [EN](claude/agents/en/executive-assistant.md) | [KO](claude/agents/kr/executive-assistant.md) | `Read, Write` | 기업 전략, 리더십 |
-| [**최고운영책임자**](claude/agents/kr/operations-manager.md) | [EN](claude/agents/en/operations-manager.md) | [KO](claude/agents/kr/operations-manager.md) | `Read, Write, Bash` | 운영, 실행 |
-| [**최고기술책임자**](claude/agents/kr/cloud-architect.md) | [EN](claude/agents/en/cloud-architect.md) | [KO](claude/agents/kr/cloud-architect.md) | `Read, Write, Edit, Bash` | 기술 전략, 혁신 |
-| [**최고마케팅책임자**](claude/agents/kr/brand-manager.md) | [EN](claude/agents/en/brand-manager.md) | [KO](claude/agents/kr/brand-manager.md) | `Read, Write` | 마케팅 전략, 브랜드 |
-| [**최고제품책임자**](claude/agents/kr/product-manager.md) | [EN](claude/agents/en/product-manager.md) | [KO](claude/agents/kr/product-manager.md) | `Read, Write` | 제품 전략, 혁신 |
+| [**최고경영자**](claude/agents/ko/executive-assistant.md) | [EN](claude/agents/en/executive-assistant.md) | [KO](claude/agents/ko/executive-assistant.md) | `Read, Write` | 기업 전략, 리더십 |
+| [**최고운영책임자**](claude/agents/ko/operations-manager.md) | [EN](claude/agents/en/operations-manager.md) | [KO](claude/agents/ko/operations-manager.md) | `Read, Write, Bash` | 운영, 실행 |
+| [**최고기술책임자**](claude/agents/ko/cloud-architect.md) | [EN](claude/agents/en/cloud-architect.md) | [KO](claude/agents/ko/cloud-architect.md) | `Read, Write, Edit, Bash` | 기술 전략, 혁신 |
+| [**최고마케팅책임자**](claude/agents/ko/brand-manager.md) | [EN](claude/agents/en/brand-manager.md) | [KO](claude/agents/ko/brand-manager.md) | `Read, Write` | 마케팅 전략, 브랜드 |
+| [**최고제품책임자**](claude/agents/ko/product-manager.md) | [EN](claude/agents/en/product-manager.md) | [KO](claude/agents/ko/product-manager.md) | `Read, Write` | 제품 전략, 혁신 |
 
 ## 🎯 사용 예시
 
@@ -328,7 +328,7 @@ claude-agents-power/
 ├── src/                    # TypeScript 소스 코드
 ├── claude/agents/         # 에이전트 정의
 │   ├── en/               # 영어 에이전트 (85개 역할)
-│   ├── kr/               # 한국어 에이전트 (85개 역할)
+│   ├── ko/               # 한국어 에이전트 (85개 역할)
 │   ├── ja/               # 일본어 에이전트 (5개 역할)
 │   └── zh/               # 중국어 에이전트 (8개 역할)
 ├── sub-agents/            # 레거시 에이전트 정의 (deprecated)

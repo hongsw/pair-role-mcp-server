@@ -6,7 +6,7 @@
 
 ```bash
 # 1. 프로젝트 디렉토리로 이동
-cd /Users/hongmartin/Claude/sub-agent-context
+cd /Users/hongmartin/Claude/claude-agents-power
 
 # 2. MCP 서버 디렉토리로 이동
 cd pair-role-mcp-server
@@ -36,8 +36,8 @@ MCP 서버가 연결되었는지 확인해줘
 
 ### 현재 프로젝트 분석
 ```
-현재 sub-agent-context 프로젝트를 분석해줘:
-mcp: analyze-project { "projectPath": "/Users/hongmartin/Claude/sub-agent-context" }
+현재 claude-agents-power 프로젝트를 분석해줘:
+mcp: analyze-project { "projectPath": "/Users/hongmartin/Claude/claude-agents-power" }
 ```
 
 ### 에이전트 목록 확인
@@ -51,7 +51,7 @@ mcp: list-agents { "language": "kr" }
 이 프로젝트에 필요한 에이전트들을 설치해줘:
 mcp: install-agents {
   "agentNames": ["backend-engineer", "devops-engineer"],
-  "targetPath": "/Users/hongmartin/Claude/sub-agent-context",
+  "targetPath": "/Users/hongmartin/Claude/claude-agents-power",
   "language": "kr"
 }
 ```
@@ -74,17 +74,17 @@ mcp: install-agents {
 
 1. 에이전트 파일들이 올바른 위치에 있는지 확인:
    ```bash
-   ls -la /Users/hongmartin/Claude/sub-agent-context/sub-agents/
+   ls -la /Users/hongmartin/Claude/claude-agents-power/sub-agents/
    ```
 
 2. 한국어 에이전트 확인:
    ```bash
-   ls -la /Users/hongmartin/Claude/sub-agent-context/sub-agents/kr/
+   ls -la /Users/hongmartin/Claude/claude-agents-power/sub-agents/kr/
    ```
 
 ### 권한 문제가 발생하는 경우
 
 start.sh 파일에 실행 권한이 있는지 확인:
 ```bash
-chmod +x /Users/hongmartin/Claude/sub-agent-context/pair-role-mcp-server/start.sh
+chmod +x /Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/start.sh
 ```

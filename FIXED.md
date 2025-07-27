@@ -15,8 +15,8 @@
   "mcpServers": {
     "pair-role": {
       "command": "/Users/hongmartin/.asdf/installs/nodejs/24.4.0/bin/node",
-      "args": ["/Users/hongmartin/Claude/sub-agent-context/pair-role-mcp-server/dist/index.js"],
-      "cwd": "/Users/hongmartin/Claude/sub-agent-context",
+      "args": ["/Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/dist/index.js"],
+      "cwd": "/Users/hongmartin/Claude/claude-agents-power",
       "env": {}
     }
   }
@@ -48,4 +48,4 @@ tail -f ~/Library/Logs/Claude/mcp-server-sub-agents.log
 
 서버가 정상적으로 실행되면 다음과 같은 로그가 나타납니다:
 - "Server started and connected successfully"
-- "Loading agents from: /Users/hongmartin/Claude/sub-agent-context/sub-agents"
+- "Loading agents from: /Users/hongmartin/Claude/claude-agents-power/sub-agents"

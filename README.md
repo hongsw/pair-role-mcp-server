@@ -141,8 +141,7 @@ Add to your `~/.config/claude/mcp_servers.json`:
       "args": ["/path/to/claude-agents-power/dist/index.js"],
       "cwd": "/path/to/your/project",
       "env": {
-        "GITHUB_TOKEN": "your_github_token_here",
-        "POSTHOG_API_KEY": "your_posthog_api_key_here"
+        "GITHUB_TOKEN": "your_github_token_here"
       }
     }
   }
@@ -160,13 +159,13 @@ Configure these optional environment variables for enhanced functionality:
    cp .env.example .env
    ```
 
-2. Edit `.env` and add your values:
+2. Edit `.env` and add your GitHub token:
    ```bash
-   # GitHub Personal Access Token
+   # GitHub Personal Access Token (required for auto issue creation)
    GITHUB_TOKEN=ghp_your_actual_token_here
    
-   # PostHog API Key
-   POSTHOG_API_KEY=phc_your_actual_key_here
+   # To disable analytics, uncomment:
+   # DISABLE_ANALYTICS=true
    ```
 
 #### Method 2: Using MCP configuration
@@ -179,10 +178,14 @@ Add environment variables directly to your MCP server configuration as shown abo
   - Create at: https://github.com/settings/tokens
   - Required permissions: `public_repo` or `repo` (for private repos)
   
-- **`POSTHOG_API_KEY`**: PostHog API key for anonymous usage analytics
-  - Helps improve the tool by understanding usage patterns
+- **`DISABLE_ANALYTICS`**: Set to `true` to disable anonymous usage analytics
+  - Analytics is enabled by default to help improve the tool
   - No personal data is collected, only tool usage metrics
-  - Get your key at: https://app.posthog.com/project/settings
+  - Example: `DISABLE_ANALYTICS=true`
+
+- **`POSTHOG_API_KEY`**: Custom PostHog API key (optional)
+  - The tool includes a default public key for analytics
+  - Only set if you want to use your own PostHog project
   
 - **`POSTHOG_HOST`**: PostHog instance URL (defaults to https://app.posthog.com)
   - Only needed if using a self-hosted PostHog instance

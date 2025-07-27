@@ -141,8 +141,7 @@ npm run build
       "args": ["/path/to/claude-agents-power/dist/index.js"],
       "cwd": "/path/to/your/project",
       "env": {
-        "GITHUB_TOKEN": "your_github_token_here",
-        "POSTHOG_API_KEY": "your_posthog_api_key_here"
+        "GITHUB_TOKEN": "your_github_token_here"
       }
     }
   }
@@ -160,13 +159,13 @@ npm run build
    cp .env.example .env
    ```
 
-2. `.env` 파일을 편집하여 값 추가:
+2. `.env` 파일을 편집하여 GitHub 토큰 추가:
    ```bash
-   # GitHub 개인 액세스 토큰
+   # GitHub 개인 액세스 토큰 (자동 이슈 생성에 필요)
    GITHUB_TOKEN=ghp_실제_토큰_입력
    
-   # PostHog API 키
-   POSTHOG_API_KEY=phc_실제_키_입력
+   # 분석을 비활성화하려면 주석 해제:
+   # DISABLE_ANALYTICS=true
    ```
 
 #### 방법 2: MCP 설정 사용
@@ -179,10 +178,14 @@ npm run build
   - 생성 위치: https://github.com/settings/tokens
   - 필요한 권한: `public_repo` 또는 `repo` (비공개 저장소의 경우)
   
-- **`POSTHOG_API_KEY`**: 익명 사용량 분석을 위한 PostHog API 키
-  - 사용 패턴을 이해하여 도구를 개선하는 데 도움
+- **`DISABLE_ANALYTICS`**: 익명 사용량 분석을 비활성화하려면 `true`로 설정
+  - 도구 개선을 위해 기본적으로 분석이 활성화됨
   - 개인 데이터는 수집하지 않으며, 도구 사용 메트릭만 수집
-  - 키 받기: https://app.posthog.com/project/settings
+  - 예시: `DISABLE_ANALYTICS=true`
+
+- **`POSTHOG_API_KEY`**: 사용자 정의 PostHog API 키 (선택사항)
+  - 도구에는 분석을 위한 기본 공개 키가 포함되어 있음
+  - 자체 PostHog 프로젝트를 사용하려는 경우에만 설정
   
 - **`POSTHOG_HOST`**: PostHog 인스턴스 URL (기본값: https://app.posthog.com)
   - 자체 호스팅 PostHog 인스턴스를 사용하는 경우에만 필요

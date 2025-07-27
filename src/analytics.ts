@@ -3,11 +3,16 @@ import { PostHog } from 'posthog-node';
 let posthogClient: PostHog | null = null;
 
 export function initializeAnalytics(): PostHog | null {
-  const apiKey = process.env.POSTHOG_API_KEY;
+  // Default public API key for claude-agents-power project
+  // This is safe to expose as it can only send events, not read data
+  const defaultApiKey = 'phc_KqHors8kFdXeVPCDsUvYkozECpkRwHELSQ3L5lGmFXS';
+  
+  const apiKey = process.env.POSTHOG_API_KEY || defaultApiKey;
   const host = process.env.POSTHOG_HOST || 'https://app.posthog.com';
   
-  if (!apiKey) {
-    console.error('[MCP Sub-Agents] PostHog API key not found. Analytics disabled.');
+  // Allow disabling analytics by setting DISABLE_ANALYTICS=true
+  if (process.env.DISABLE_ANALYTICS === 'true') {
+    console.error('[MCP Sub-Agents] Analytics disabled by environment variable.');
     return null;
   }
 

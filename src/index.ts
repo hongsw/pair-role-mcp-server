@@ -19,11 +19,22 @@ import fs from 'fs';
 import os from 'os';
 import dotenv from 'dotenv';
 
+// ES module compatibility
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // Load environment variables from .env file
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Get version from package.json
+const packageJsonPath = path.join(__dirname, '../package.json');
+let version = '1.6.0'; // fallback version
+try {
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  version = packageJson.version;
+} catch (error) {
+  console.error('[MCP Sub-Agents] Could not read package.json version:', error);
+}
 
 // Parse CLI arguments using commander
 const program = new Command()
@@ -168,7 +179,7 @@ function createServerInstance() {
   const server = new Server(
     {
       name: 'claude-agents-power-mcp-server',
-      version: '1.2.4',
+      version: version,
     },
     {
       capabilities: {
@@ -656,7 +667,7 @@ Key practices:
             action: {
               type: 'string',
               description: 'Management action to perform',
-              enum: ['install', 'stats', 'refresh'],
+              enum: ['install', 'stats', 'refresh', 'version'],
             },
             agentNames: {
               type: 'array',
@@ -1197,7 +1208,7 @@ ${issueBody || 'A new agent is needed for this role.'}
 
     case 'manage-agents': {
       const { action, agentNames, targetPath, language = 'en', limit = 10 } = args as {
-        action: 'install' | 'stats' | 'refresh';
+        action: 'install' | 'stats' | 'refresh' | 'version';
         agentNames?: string[];
         targetPath?: string;
         language?: string;
@@ -1302,6 +1313,34 @@ ${issueBody || 'A new agent is needed for this role.'}
               ],
             };
           }
+        }
+
+        case 'version': {
+          const agents = agentManager.getAllAgents();
+          const agentsByLanguage = {
+            en: agentManager.getAllAgents('en').length,
+            ko: agentManager.getAllAgents('ko').length,
+            ja: agentManager.getAllAgents('ja').length,
+            zh: agentManager.getAllAgents('zh').length,
+          };
+          
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({
+                  success: true,
+                  version: version,
+                  serverName: 'claude-agents-power-mcp-server',
+                  totalAgents: agents.length,
+                  agentsByLanguage,
+                  npmPackage: 'claude-agents-power',
+                  repository: 'https://github.com/hongsw/claude-agents-power-mcp-server',
+                  message: `Claude Agents Power MCP Server v${version} - ${agents.length} agents available`,
+                }, null, 2),
+              },
+            ],
+          };
         }
 
         default:

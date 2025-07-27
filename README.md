@@ -8,6 +8,68 @@
 
 > 🎯 **Smart Role Assignment for Development Teams** - An intelligent MCP server that analyzes your project and recommends the perfect team composition from 100+ professional roles across all company departments.
 
+## 🚀 Quick Start with Claude
+
+### 1️⃣ Install & Configure MCP Server
+
+```bash
+# Option 1: Install via npm (when published)
+npm install -g pair-role-mcp-server
+
+# Option 2: Clone and build from source
+git clone https://github.com/yourusername/pair-role-mcp-server.git
+cd pair-role-mcp-server && npm install && npm run build
+```
+
+**Configure Claude Desktop MCP Settings:**
+
+Add to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "pair-role": {
+      "command": "node",
+      "args": ["/path/to/pair-role-mcp-server/dist/index.js"]
+    }
+  }
+}
+```
+
+### 2️⃣ Usage in Claude
+
+Open Claude and try this example:
+
+```
+👤 User: "mcp pair-role을 이용해서 이 프로젝트를 위한 추천 및 agents/*.md 파일을 다운로드 해줘"
+
+🤖 Claude: I'll analyze your project and download the recommended agents for you.
+
+[Uses MCP tools to:]
+1. 📊 Analyze your project structure 
+2. 🎯 Recommend suitable roles
+3. 📁 Download agents to ./claude/agents/
+4. ✅ Ready to use sub-agents for your project!
+```
+
+### 3️⃣ Verify Installation
+
+Check that agents were downloaded:
+```bash
+ls ./claude/agents/
+# You should see downloaded .md files for recommended roles
+```
+
+### 4️⃣ Start Using Sub-Agents
+
+Now you can use specialized roles in Claude:
+```
+"frontend-developer를 사용해서 React 컴포넌트를 만들어줘"
+"data-scientist로 이 데이터를 분석해줘"  
+"devops-engineer가 CI/CD 파이프라인을 설정해줘"
+```
+
+---
+
 ## 📖 Table of Contents
 
 - [🌟 Features](#-features)
@@ -52,9 +114,9 @@
 - Installs to `./claude/agents/` directory structure
 - No need to create agent templates from scratch
 
-## 🚀 Quick Start
+## 🚀 Development Setup
 
-### Installation
+### Build from Source
 
 ```bash
 # Clone the repository
@@ -68,7 +130,7 @@ npm install
 npm run build
 ```
 
-### MCP Configuration
+### MCP Configuration for Development
 
 Add to your `~/.config/claude/mcp_servers.json`:
 
@@ -85,7 +147,7 @@ Add to your `~/.config/claude/mcp_servers.json`:
 }
 ```
 
-### Basic Usage
+### MCP Tools Reference
 
 ```bash
 # Analyze your current project

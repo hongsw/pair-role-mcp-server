@@ -1,14 +1,21 @@
-# Pair-Role MCP Server 설치 가이드
+# Claude Agents Power 설치 가이드
 
-## 1. 프로젝트 빌드
+## 1. npm으로 설치 (권장)
 
 ```bash
-cd /Users/hongmartin/Claude/sub-agent-context/pair-role-mcp-server
+npm install -g claude-agents-power
+```
+
+## 2. 소스에서 빌드 (개발용)
+
+```bash
+git clone https://github.com/hongsw/claude-agents-power.git
+cd claude-agents-power
 npm install
 npm run build
 ```
 
-## 2. MCP 서버 설정
+## 3. MCP 서버 설정
 
 Claude Code 설정 파일에 다음 내용을 추가하세요:
 
@@ -19,26 +26,23 @@ Claude Code 설정 파일에 다음 내용을 추가하세요:
 ```json
 {
   "mcpServers": {
-    "pair-role": {
-      "command": "/Users/hongmartin/.asdf/installs/nodejs/24.4.0/bin/node",
-      "args": ["/Users/hongmartin/Claude/sub-agent-context/pair-role-mcp-server/dist/index.js"],
-      "cwd": "/Users/hongmartin/Claude/sub-agent-context",
-      "env": {}
+    "claude-agents-power": {
+      "command": "claude-agents-power"
     }
   }
 }
 ```
 
-## 3. 사용 가능한 도구들
+## 4. 사용 가능한 도구들
 
-- `mcp__pair-role__analyze-project`: 프로젝트 분석 및 에이전트 추천
-- `mcp__pair-role__search-agents`: 에이전트 검색
-- `mcp__pair-role__list-agents`: 모든 에이전트 목록
-- `mcp__pair-role__get-agent-details`: 특정 에이전트 상세 정보
-- `mcp__pair-role__install-agents`: 에이전트 설치
-- `mcp__pair-role__recommend-by-keywords`: 키워드 기반 에이전트 추천
+- `mcp__claude-agents-power__analyze-project`: 프로젝트 분석 및 에이전트 추천
+- `mcp__claude-agents-power__search-agents`: 에이전트 검색
+- `mcp__claude-agents-power__list-agents`: 모든 에이전트 목록
+- `mcp__claude-agents-power__get-agent-details`: 특정 에이전트 상세 정보
+- `mcp__claude-agents-power__install-agents`: 에이전트 설치
+- `mcp__claude-agents-power__recommend-by-keywords`: 키워드 기반 에이전트 추천
 
-## 4. 테스트
+## 5. 테스트
 
 MCP 서버가 정상적으로 동작하는지 확인:
 
@@ -50,7 +54,7 @@ node dist/index.js --help
 node dist/index.js --transport stdio
 ```
 
-## 5. Context7 패턴 적용 완료
+## 6. Context7 패턴 적용 완료
 
 - ✅ CLI 인자 처리 (`commander` 사용)
 - ✅ 모듈화된 서버 구조
@@ -58,7 +62,7 @@ node dist/index.js --transport stdio
 - ✅ JSON 응답 형식 통일
 - ✅ 실행 권한 자동 설정
 
-## 6. 문제 해결
+## 7. 문제 해결
 
 ### Node.js 경로 확인
 ```bash
@@ -73,4 +77,4 @@ ls -la dist/
 ```
 
 ### 서버 연결 테스트
-Claude Code를 재시작한 후 MCP 도구들이 `mcp__pair-role__` 접두사로 나타나는지 확인하세요.
+Claude Code를 재시작한 후 MCP 도구들이 `mcp__claude-agents-power__` 접두사로 나타나는지 확인하세요.

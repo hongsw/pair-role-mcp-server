@@ -1,10 +1,10 @@
-# Pair-Role MCP Server 문제 해결 가이드
+# Claude Agents Power 문제 해결 가이드
 
 ## 🚨 일반적인 문제들
 
 ### 1. MCP 도구가 Claude Code에서 보이지 않음
 
-**증상**: `mcp__pair-role__*` 도구들이 나타나지 않음
+**증상**: `mcp__claude-agents-power__*` 도구들이 나타나지 않음
 
 **해결 방법**:
 
@@ -205,7 +205,7 @@ which node
 
 ### ✅ Claude Code 연동
 - [ ] Claude Code 재시작함
-- [ ] `mcp__pair-role__*` 도구들 보임
+- [ ] `mcp__claude-agents-power__*` 도구들 보임
 - [ ] 도구 실행 시 에러 없음
 
 ### ✅ 기능 테스트

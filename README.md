@@ -1,4 +1,4 @@
-# 🤖 Pair-Role MCP Server
+# 🤖 Claude Agents Power
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 [![한국어](https://img.shields.io/badge/lang-한국어-red.svg)](README.kr.md)
@@ -13,12 +13,12 @@
 ### 1️⃣ Install & Configure MCP Server
 
 ```bash
-# Option 1: Install via npm (when published)
-npm install -g pair-role-mcp-server
+# Install via npm
+npm install -g claude-agents-power
 
-# Option 2: Clone and build from source
-git clone https://github.com/yourusername/pair-role-mcp-server.git
-cd pair-role-mcp-server && npm install && npm run build
+# Or clone and build from source
+git clone https://github.com/hongsw/claude-agents-power.git
+cd claude-agents-power && npm install && npm run build
 ```
 
 **Configure Claude Desktop MCP Settings:**
@@ -27,9 +27,8 @@ Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "pair-role": {
-      "command": "node",
-      "args": ["/path/to/pair-role-mcp-server/dist/index.js"]
+    "claude-agents-power": {
+      "command": "claude-agents-power"
     }
   }
 }
@@ -40,7 +39,7 @@ Add to your `claude_desktop_config.json`:
 Open Claude and try this example:
 
 ```
-👤 User: "mcp pair-role을 이용해서 이 프로젝트를 위한 추천 및 agents/*.md 파일을 다운로드 해줘"
+👤 User: "claude-agents-power를 이용해서 이 프로젝트를 위한 추천 및 agents/*.md 파일을 다운로드 해줘"
 
 🤖 Claude: I'll analyze your project and download the recommended agents for you.
 
@@ -120,8 +119,8 @@ Now you can use specialized roles in Claude:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/pair-role-mcp-server.git
-cd pair-role-mcp-server
+git clone https://github.com/hongsw/claude-agents-power.git
+cd claude-agents-power
 
 # Install dependencies
 npm install
@@ -137,9 +136,9 @@ Add to your `~/.config/claude/mcp_servers.json`:
 ```json
 {
   "mcpServers": {
-    "pair-role": {
+    "claude-agents-power": {
       "command": "node",
-      "args": ["/path/to/pair-role-mcp-server/dist/index.js"],
+      "args": ["/path/to/claude-agents-power/dist/index.js"],
       "cwd": "/path/to/your/project",
       "env": {}
     }
@@ -151,13 +150,13 @@ Add to your `~/.config/claude/mcp_servers.json`:
 
 ```bash
 # Analyze your current project
-mcp__pair-role__analyze-project
+mcp__claude-agents-power__analyze-project
 
 # Get role recommendations  
-mcp__pair-role__recommend-by-keywords ["web", "api", "database"]
+mcp__claude-agents-power__recommend-by-keywords ["web", "api", "database"]
 
 # Install recommended agents
-mcp__pair-role__install-agents ["frontend-developer", "backend-developer"]
+mcp__claude-agents-power__install-agents ["frontend-developer", "backend-developer"]
 ```
 
 ## 📋 Available Roles
@@ -371,19 +370,19 @@ mcp__pair-role__install-agents ["frontend-developer", "backend-developer"]
 ### 📊 Download Statistics
 ```bash
 # Get download statistics for popular agents
-mcp__pair-role__get-download-stats
+mcp__claude-agents-power__get-download-stats
 
 # Refresh agents from GitHub repository
-mcp__pair-role__refresh-agents
+mcp__claude-agents-power__refresh-agents
 ```
 
 ### 🚀 Startup MVP Development
 ```bash
 # Analyze project and get recommendations
-mcp__pair-role__analyze-project
+mcp__claude-agents-power__analyze-project
 
 # Install core startup team
-mcp__pair-role__install-agents [
+mcp__claude-agents-power__install-agents [
   "product-manager",
   "frontend-developer", 
   "backend-developer",
@@ -394,12 +393,12 @@ mcp__pair-role__install-agents [
 ### 🏢 Enterprise Application
 ```bash
 # Get recommendations for enterprise project
-mcp__pair-role__recommend-by-keywords [
+mcp__claude-agents-power__recommend-by-keywords [
   "enterprise", "security", "scalability", "compliance"
 ]
 
 # Install enterprise team
-mcp__pair-role__install-agents [
+mcp__claude-agents-power__install-agents [
   "solution-architect",
   "security-engineer",
   "devops-engineer",
@@ -410,10 +409,10 @@ mcp__pair-role__install-agents [
 ### 📊 Data Platform
 ```bash
 # Search for data-related roles
-mcp__pair-role__search-agents "data analytics machine learning"
+mcp__claude-agents-power__search-agents "data analytics machine learning"
 
 # Install data team
-mcp__pair-role__install-agents [
+mcp__claude-agents-power__install-agents [
   "data-scientist",
   "data-engineer", 
   "machine-learning-engineer",
@@ -440,8 +439,8 @@ mcp__pair-role__install-agents [
 
 ### Build from Source
 ```bash
-git clone https://github.com/yourusername/pair-role-mcp-server.git
-cd pair-role-mcp-server
+git clone https://github.com/hongsw/claude-agents-power.git
+cd claude-agents-power
 npm install
 npm run build
 npm test
@@ -449,7 +448,7 @@ npm test
 
 ### Project Structure
 ```
-pair-role-mcp-server/
+claude-agents-power/
 ├── src/                    # TypeScript source code
 ├── claude/agents/         # Agent definitions
 │   ├── en/               # English agents (85 roles)
@@ -491,7 +490,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ Star this repository if you find it useful!**
 
-[🐛 Report Bug](https://github.com/yourusername/pair-role-mcp-server/issues) • [✨ Request Feature](https://github.com/yourusername/pair-role-mcp-server/issues) • [📖 Documentation](docs/)
+[🐛 Report Bug](https://github.com/hongsw/claude-agents-power/issues) • [✨ Request Feature](https://github.com/hongsw/claude-agents-power/issues) • [📖 Documentation](docs/)
 
 Made with ❤️ for the Claude Code community
 

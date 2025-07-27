@@ -1,4 +1,4 @@
-# Pair-Role MCP Server 실전 예시
+# Claude Agents Power 실전 예시
 
 ## 🎯 상황별 활용 예시
 
@@ -10,10 +10,10 @@
 사용자: "새 React 프로젝트를 시작하는데 어떤 에이전트들이 필요할까?"
 
 1단계 - 프로젝트 분석:
-mcp__pair-role__analyze-project를 사용해서 현재 프로젝트 구조를 분석해줘
+mcp__claude-agents-power__analyze-project를 사용해서 현재 프로젝트 구조를 분석해줘
 
 2단계 - 추천 받은 에이전트들 설치:
-분석 결과에서 추천된 에이전트들을 mcp__pair-role__install-agents로 설치해줘
+분석 결과에서 추천된 에이전트들을 mcp__claude-agents-power__install-agents로 설치해줘
 
 3단계 - 추가 에이전트 고려:
 "product-manager"와 "qa-engineer"의 상세 정보를 비교해서 프로젝트에 필요한지 알려줘
@@ -35,10 +35,10 @@ mcp__pair-role__analyze-project를 사용해서 현재 프로젝트 구조를 �
 사용자: "데이터 분석 플랫폼을 만들고 있어. 어떤 전문가들이 필요할까?"
 
 1단계 - 키워드 기반 추천:
-["data", "analytics", "machine-learning", "visualization"] 키워드로 mcp__pair-role__recommend-by-keywords를 사용해서 에이전트를 추천해줘
+["data", "analytics", "machine-learning", "visualization"] 키워드로 mcp__claude-agents-power__recommend-by-keywords를 사용해서 에이전트를 추천해줘
 
 2단계 - 데이터 카테고리 탐색:
-data 카테고리의 모든 에이전트를 mcp__pair-role__list-agents로 보여줘
+data 카테고리의 모든 에이전트를 mcp__claude-agents-power__list-agents로 보여줘
 
 3단계 - 상세 비교:
 "data-scientist", "data-engineer", "machine-learning-engineer"의 역할 차이를 설명해줘

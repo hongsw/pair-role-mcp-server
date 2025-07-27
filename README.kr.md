@@ -1,4 +1,4 @@
-# 🤖 Pair-Role MCP Server
+# 🤖 Claude Agents Power
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 [![한국어](https://img.shields.io/badge/lang-한국어-red.svg)](README.kr.md)
@@ -13,12 +13,12 @@
 ### 1️⃣ MCP 서버 설치 및 구성
 
 ```bash
-# 옵션 1: npm을 통한 설치 (출시 후)
-npm install -g pair-role-mcp-server
+# npm을 통한 설치
+npm install -g claude-agents-power
 
-# 옵션 2: 소스에서 클론 및 빌드
-git clone https://github.com/yourusername/pair-role-mcp-server.git
-cd pair-role-mcp-server && npm install && npm run build
+# 또는 소스에서 클론 및 빌드
+git clone https://github.com/hongsw/claude-agents-power.git
+cd claude-agents-power && npm install && npm run build
 ```
 
 **Claude Desktop MCP 설정 구성:**
@@ -27,9 +27,8 @@ cd pair-role-mcp-server && npm install && npm run build
 ```json
 {
   "mcpServers": {
-    "pair-role": {
-      "command": "node",
-      "args": ["/path/to/pair-role-mcp-server/dist/index.js"]
+    "claude-agents-power": {
+      "command": "claude-agents-power"
     }
   }
 }
@@ -40,7 +39,7 @@ cd pair-role-mcp-server && npm install && npm run build
 Claude를 열고 다음 예시를 시도해보세요:
 
 ```
-👤 사용자: "mcp pair-role을 이용해서 이 프로젝트를 위한 추천 및 agents/*.md 파일을 다운로드 해줘"
+👤 사용자: "claude-agents-power를 이용해서 이 프로젝트를 위한 추천 및 agents/*.md 파일을 다운로드 해줘"
 
 🤖 Claude: 프로젝트를 분석하고 추천 에이전트를 다운로드해드리겠습니다.
 
@@ -120,8 +119,8 @@ ls ./claude/agents/
 
 ```bash
 # 저장소 클론
-git clone https://github.com/yourusername/pair-role-mcp-server.git
-cd pair-role-mcp-server
+git clone https://github.com/hongsw/claude-agents-power.git
+cd claude-agents-power
 
 # 종속성 설치
 npm install
@@ -137,9 +136,9 @@ npm run build
 ```json
 {
   "mcpServers": {
-    "pair-role": {
+    "claude-agents-power": {
       "command": "node",
-      "args": ["/path/to/pair-role-mcp-server/dist/index.js"],
+      "args": ["/path/to/claude-agents-power/dist/index.js"],
       "cwd": "/path/to/your/project",
       "env": {}
     }
@@ -151,13 +150,13 @@ npm run build
 
 ```bash
 # 현재 프로젝트 분석
-mcp__pair-role__analyze-project
+mcp__claude-agents-power__analyze-project
 
 # 역할 추천 받기
-mcp__pair-role__recommend-by-keywords ["web", "api", "database"]
+mcp__claude-agents-power__recommend-by-keywords ["web", "api", "database"]
 
 # 추천 에이전트 설치
-mcp__pair-role__install-agents ["frontend-developer", "backend-developer"]
+mcp__claude-agents-power__install-agents ["frontend-developer", "backend-developer"]
 ```
 
 ## 📋 사용 가능한 역할
@@ -247,19 +246,19 @@ mcp__pair-role__install-agents ["frontend-developer", "backend-developer"]
 ### 📊 다운로드 통계
 ```bash
 # 인기 에이전트 다운로드 통계 가져오기
-mcp__pair-role__get-download-stats
+mcp__claude-agents-power__get-download-stats
 
 # GitHub 저장소에서 에이전트 새로고침
-mcp__pair-role__refresh-agents
+mcp__claude-agents-power__refresh-agents
 ```
 
 ### 🚀 스타트업 MVP 개발
 ```bash
 # 프로젝트 분석 및 추천 받기
-mcp__pair-role__analyze-project
+mcp__claude-agents-power__analyze-project
 
 # 핵심 스타트업 팀 설치
-mcp__pair-role__install-agents [
+mcp__claude-agents-power__install-agents [
   "product-manager",
   "frontend-developer", 
   "backend-developer",
@@ -270,12 +269,12 @@ mcp__pair-role__install-agents [
 ### 🏢 엔터프라이즈 애플리케이션
 ```bash
 # 엔터프라이즈 프로젝트에 대한 추천 받기
-mcp__pair-role__recommend-by-keywords [
+mcp__claude-agents-power__recommend-by-keywords [
   "enterprise", "security", "scalability", "compliance"
 ]
 
 # 엔터프라이즈 팀 설치
-mcp__pair-role__install-agents [
+mcp__claude-agents-power__install-agents [
   "cloud-architect",
   "security-engineer",
   "devops-engineer",
@@ -286,10 +285,10 @@ mcp__pair-role__install-agents [
 ### 📊 데이터 플랫폼
 ```bash
 # 데이터 관련 역할 검색
-mcp__pair-role__search-agents "data analytics machine learning"
+mcp__claude-agents-power__search-agents "data analytics machine learning"
 
 # 데이터 팀 설치
-mcp__pair-role__install-agents [
+mcp__claude-agents-power__install-agents [
   "data-scientist",
   "data-engineer", 
   "machine-learning-engineer",
@@ -325,7 +324,7 @@ npm test
 
 ### 프로젝트 구조
 ```
-pair-role-mcp-server/
+claude-agents-power/
 ├── src/                    # TypeScript 소스 코드
 ├── claude/agents/         # 에이전트 정의
 │   ├── en/               # 영어 에이전트 (85개 역할)
@@ -367,7 +366,7 @@ pair-role-mcp-server/
 
 **⭐ 이 저장소가 유용하다면 별표를 눌러주세요!**
 
-[🐛 버그 신고](https://github.com/yourusername/pair-role-mcp-server/issues) • [✨ 기능 요청](https://github.com/yourusername/pair-role-mcp-server/issues) • [📖 문서](docs/)
+[🐛 버그 신고](https://github.com/hongsw/claude-agents-power/issues) • [✨ 기능 요청](https://github.com/hongsw/claude-agents-power/issues) • [📖 문서](docs/)
 
 Claude Code 커뮤니티를 위해 ❤️로 제작되었습니다
 

@@ -1,4 +1,4 @@
-# Pair-Role MCP Server 사용 가이드
+# Claude Agents Power 사용 가이드
 
 ## 📋 목차
 1. [기본 사용법](#기본-사용법)
@@ -17,17 +17,17 @@
 ```bash
 # Claude Code에서 MCP 도구들이 보이는지 확인
 # 다음과 같은 도구들이 나타나야 합니다:
-- mcp__pair-role__analyze-project
-- mcp__pair-role__search-agents  
-- mcp__pair-role__list-agents
-- mcp__pair-role__get-agent-details
-- mcp__pair-role__install-agents
-- mcp__pair-role__recommend-by-keywords
+- mcp__claude-agents-power__analyze-project
+- mcp__claude-agents-power__search-agents  
+- mcp__claude-agents-power__list-agents
+- mcp__claude-agents-power__get-agent-details
+- mcp__claude-agents-power__install-agents
+- mcp__claude-agents-power__recommend-by-keywords
 ```
 
 ### 모든 에이전트 목록 보기
 ```
-mcp__pair-role__list-agents를 사용해서 모든 에이전트를 보여줘
+mcp__claude-agents-power__list-agents를 사용해서 모든 에이전트를 보여줘
 ```
 
 ---
@@ -39,7 +39,7 @@ mcp__pair-role__list-agents를 사용해서 모든 에이전트를 보여줘
 
 **사용법:**
 ```
-mcp__pair-role__analyze-project를 사용해서 현재 프로젝트를 분석해줘
+mcp__claude-agents-power__analyze-project를 사용해서 현재 프로젝트를 분석해줘
 ```
 
 **분석 항목:**
@@ -73,7 +73,7 @@ mcp__pair-role__analyze-project를 사용해서 현재 프로젝트를 분석해
 
 **사용법:**
 ```
-"React 개발"에 관련된 에이전트를 mcp__pair-role__search-agents로 검색해줘
+"React 개발"에 관련된 에이전트를 mcp__claude-agents-power__search-agents로 검색해줘
 ```
 
 ### 2. 카테고리별 에이전트 목록
@@ -81,7 +81,7 @@ mcp__pair-role__analyze-project를 사용해서 현재 프로젝트를 분석해
 
 **사용법:**
 ```
-development 카테고리의 에이전트들을 mcp__pair-role__list-agents로 보여줘
+development 카테고리의 에이전트들을 mcp__claude-agents-power__list-agents로 보여줘
 ```
 
 **지원 카테고리:**
@@ -101,7 +101,7 @@ development 카테고리의 에이전트들을 mcp__pair-role__list-agents로 �
 
 **사용법:**
 ```
-["api", "database", "security"] 키워드로 mcp__pair-role__recommend-by-keywords를 사용해서 에이전트를 추천해줘
+["api", "database", "security"] 키워드로 mcp__claude-agents-power__recommend-by-keywords를 사용해서 에이전트를 추천해줘
 ```
 
 ---
@@ -110,17 +110,17 @@ development 카테고리의 에이전트들을 mcp__pair-role__list-agents로 �
 
 ### 1. 단일 에이전트 설치
 ```
-["frontend-developer"] 에이전트를 현재 프로젝트에 mcp__pair-role__install-agents로 설치해줘
+["frontend-developer"] 에이전트를 현재 프로젝트에 mcp__claude-agents-power__install-agents로 설치해줘
 ```
 
 ### 2. 다중 에이전트 설치
 ```
-["frontend-developer", "backend-developer", "qa-engineer"] 에이전트들을 mcp__pair-role__install-agents로 설치해줘
+["frontend-developer", "backend-developer", "qa-engineer"] 에이전트들을 mcp__claude-agents-power__install-agents로 설치해줘
 ```
 
 ### 3. 언어별 설치
 ```
-한국어 버전의 ["product-manager", "data-analyst"] 에이전트를 mcp__pair-role__install-agents로 설치해줘
+한국어 버전의 ["product-manager", "data-analyst"] 에이전트를 mcp__claude-agents-power__install-agents로 설치해줘
 ```
 
 **설치 위치:**
@@ -134,7 +134,7 @@ development 카테고리의 에이전트들을 mcp__pair-role__list-agents로 �
 ### 예시 1: 새 React 프로젝트 시작
 ```
 1. 프로젝트 분석하기
-   "mcp__pair-role__analyze-project로 현재 React 프로젝트를 분석해줘"
+   "mcp__claude-agents-power__analyze-project로 현재 React 프로젝트를 분석해줘"
 
 2. 추천 에이전트 확인
    응답에서 추천된 에이전트들 확인
@@ -149,7 +149,7 @@ development 카테고리의 에이전트들을 mcp__pair-role__list-agents로 �
    "['api', 'database', 'authentication'] 키워드로 에이전트를 추천해줘"
 
 2. 상세 정보 확인
-   "backend-developer 에이전트의 상세 정보를 mcp__pair-role__get-agent-details로 보여줘"
+   "backend-developer 에이전트의 상세 정보를 mcp__claude-agents-power__get-agent-details로 보여줘"
 
 3. 설치 및 활용
    "backend-developer와 security-engineer 에이전트를 설치해줘"

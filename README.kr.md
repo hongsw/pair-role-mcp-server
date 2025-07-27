@@ -328,8 +328,11 @@ npm test
 pair-role-mcp-server/
 ├── src/                    # TypeScript 소스 코드
 ├── claude/agents/         # 에이전트 정의
-│   ├── en/               # 영어 에이전트
-│   └── kr/               # 한국어 에이전트
+│   ├── en/               # 영어 에이전트 (85개 역할)
+│   ├── kr/               # 한국어 에이전트 (85개 역할)
+│   ├── ja/               # 일본어 에이전트 (5개 역할)
+│   └── zh/               # 중국어 에이전트 (8개 역할)
+├── sub-agents/            # 레거시 에이전트 정의 (deprecated)
 ├── dist/                 # 컴파일된 JavaScript
 ├── docs/                 # 문서
 └── examples/             # 사용 예시

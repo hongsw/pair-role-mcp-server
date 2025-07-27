@@ -451,9 +451,12 @@ npm test
 ```
 pair-role-mcp-server/
 ├── src/                    # TypeScript source code
-├── sub-agents/            # Agent definitions
-│   ├── en/               # English agents
-│   └── ko/               # Korean agents  
+├── claude/agents/         # Agent definitions
+│   ├── en/               # English agents (85 roles)
+│   ├── kr/               # Korean agents (85 roles)
+│   ├── ja/               # Japanese agents (5 roles)
+│   └── zh/               # Chinese agents (8 roles)
+├── sub-agents/            # Legacy agent definitions (deprecated)
 ├── dist/                 # Compiled JavaScript
 ├── docs/                 # Documentation
 └── examples/             # Usage examples

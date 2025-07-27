@@ -16,19 +16,19 @@
 # npm을 통한 설치
 npm install -g claude-agents-power
 
-# 또는 소스에서 클론 및 빌드
-git clone https://github.com/hongsw/claude-agents-power.git
-cd claude-agents-power && npm install && npm run build
+# Claude Desktop 자동 구성 (NEW! 🎉)
+claude-agents-power-install
 ```
 
-**Claude Desktop MCP 설정 구성:**
+**또는 수동으로 Claude Desktop 구성:**
 
 `claude_desktop_config.json`에 추가:
 ```json
 {
   "mcpServers": {
     "claude-agents-power": {
-      "command": "claude-agents-power"
+      "command": "npx",
+      "args": ["claude-agents-power"]
     }
   }
 }

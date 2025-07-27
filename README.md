@@ -16,19 +16,19 @@
 # Install via npm
 npm install -g claude-agents-power
 
-# Or clone and build from source
-git clone https://github.com/hongsw/claude-agents-power.git
-cd claude-agents-power && npm install && npm run build
+# Automatically configure Claude Desktop (NEW! 🎉)
+claude-agents-power-install
 ```
 
-**Configure Claude Desktop MCP Settings:**
+**Or manually configure Claude Desktop:**
 
 Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
     "claude-agents-power": {
-      "command": "claude-agents-power"
+      "command": "npx",
+      "args": ["claude-agents-power"]
     }
   }
 }

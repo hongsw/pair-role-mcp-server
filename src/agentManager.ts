@@ -37,33 +37,92 @@ export class AgentManager {
       // Check if the agents directory exists
       await fs.access(this.agentsPath);
       
-      // Load English agents
-      const enAgentsPath = this.agentsPath;
-      const enFiles = await fs.readdir(enAgentsPath);
-      
-      for (const file of enFiles) {
-        if (file.endsWith('.md')) {
-          const agent = await this.loadAgent(path.join(enAgentsPath, file), 'en');
-          if (agent) {
-            this.agentsCache.set(agent.name, agent);
-          }
-        }
-      }
-
-      // Load Korean agents
-      const krAgentsPath = path.join(this.agentsPath, 'kr');
+      // Load English agents from /en subdirectory
+      const enAgentsPath = path.join(this.agentsPath, 'en');
       try {
-        const krFiles = await fs.readdir(krAgentsPath);
-        for (const file of krFiles) {
+        const enFiles = await fs.readdir(enAgentsPath);
+        if (this.debug) {
+          console.error(`[MCP Sub-Agents] Found ${enFiles.length} files in ${enAgentsPath}`);
+        }
+        
+        for (const file of enFiles) {
           if (file.endsWith('.md')) {
-            const agent = await this.loadAgent(path.join(krAgentsPath, file), 'kr');
+            const agent = await this.loadAgent(path.join(enAgentsPath, file), 'en');
             if (agent) {
-              this.agentsCache.set(`${agent.name}-kr`, agent);
+              this.agentsCache.set(agent.name, agent);
             }
           }
         }
       } catch (e) {
-        // Korean agents directory doesn't exist
+        if (this.debug) {
+          console.error('[MCP Sub-Agents] English agents directory not found:', enAgentsPath);
+        }
+      }
+
+      // Load Korean agents from /ko subdirectory
+      const koAgentsPath = path.join(this.agentsPath, 'ko');
+      try {
+        const koFiles = await fs.readdir(koAgentsPath);
+        if (this.debug) {
+          console.error(`[MCP Sub-Agents] Found ${koFiles.length} files in ${koAgentsPath}`);
+        }
+        
+        for (const file of koFiles) {
+          if (file.endsWith('.md')) {
+            const agent = await this.loadAgent(path.join(koAgentsPath, file), 'ko');
+            if (agent) {
+              this.agentsCache.set(`${agent.name}-ko`, agent);
+            }
+          }
+        }
+      } catch (e) {
+        if (this.debug) {
+          console.error('[MCP Sub-Agents] Korean agents directory not found:', koAgentsPath);
+        }
+      }
+
+      // Load Japanese agents from /ja subdirectory
+      const jaAgentsPath = path.join(this.agentsPath, 'ja');
+      try {
+        const jaFiles = await fs.readdir(jaAgentsPath);
+        if (this.debug) {
+          console.error(`[MCP Sub-Agents] Found ${jaFiles.length} files in ${jaAgentsPath}`);
+        }
+        
+        for (const file of jaFiles) {
+          if (file.endsWith('.md')) {
+            const agent = await this.loadAgent(path.join(jaAgentsPath, file), 'ja');
+            if (agent) {
+              this.agentsCache.set(`${agent.name}-ja`, agent);
+            }
+          }
+        }
+      } catch (e) {
+        if (this.debug) {
+          console.error('[MCP Sub-Agents] Japanese agents directory not found:', jaAgentsPath);
+        }
+      }
+
+      // Load Chinese agents from /zh subdirectory
+      const zhAgentsPath = path.join(this.agentsPath, 'zh');
+      try {
+        const zhFiles = await fs.readdir(zhAgentsPath);
+        if (this.debug) {
+          console.error(`[MCP Sub-Agents] Found ${zhFiles.length} files in ${zhAgentsPath}`);
+        }
+        
+        for (const file of zhFiles) {
+          if (file.endsWith('.md')) {
+            const agent = await this.loadAgent(path.join(zhAgentsPath, file), 'zh');
+            if (agent) {
+              this.agentsCache.set(`${agent.name}-zh`, agent);
+            }
+          }
+        }
+      } catch (e) {
+        if (this.debug) {
+          console.error('[MCP Sub-Agents] Chinese agents directory not found:', zhAgentsPath);
+        }
       }
     } catch (error) {
       if (this.debug) {

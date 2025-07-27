@@ -698,14 +698,36 @@ Key practices:
                         if (filteredAgents.length === 0 && autoCreateIssue) {
                             const githubToken = process.env.GITHUB_TOKEN;
                             if (!githubToken) {
+                                // Generate GitHub issue creation URL with pre-filled content
+                                const issueTitle = encodeURIComponent(`[Agent Request] ${query} - New agent needed`);
+                                const issueBodyContent = encodeURIComponent(`## Agent Request
+
+**Role Name**: ${query}
+**Language**: ${language}
+
+## Description
+${issueBody || 'A new agent is needed for this role.'}
+
+## Use Cases
+- [Please describe specific use cases]
+
+## Required Tools
+- [List required tools like Read, Write, Edit, etc.]
+
+## Additional Details
+- No existing agents found matching: "${query}"
+- Please consider adding this agent to help users with this use case.`);
+                                const createIssueUrl = `https://github.com/hongsw/claude-agents-power-mcp-server/issues/new?title=${issueTitle}&body=${issueBodyContent}&labels=agent-request`;
                                 return {
                                     content: [
                                         {
                                             type: 'text',
                                             text: JSON.stringify({
                                                 success: false,
-                                                error: 'No agents found. GitHub token not configured for auto-issue creation. Set GITHUB_TOKEN environment variable.',
-                                                suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                                                error: 'No agents found. GitHub token not configured for auto-issue creation.',
+                                                suggestion: 'Click the link below to create an issue manually:',
+                                                createIssueUrl,
+                                                message: `🔍 No agents found for "${query}"\n\n📝 You can create an issue manually by clicking this link:\n${createIssueUrl}\n\n💡 Or set GITHUB_TOKEN environment variable for automatic issue creation.`,
                                             }, null, 2),
                                         },
                                     ],
@@ -795,6 +817,44 @@ ${issueBody || 'A new agent is needed for this role.'}
                                     ],
                                 };
                             }
+                        }
+                        // If no agents found and autoCreateIssue is false, provide manual creation link
+                        if (filteredAgents.length === 0) {
+                            const issueTitle = encodeURIComponent(`[Agent Request] ${query} - New agent needed`);
+                            const issueBodyContent = encodeURIComponent(`## Agent Request
+
+**Role Name**: ${query}
+**Language**: ${language}
+
+## Description
+A new agent is needed for this role.
+
+## Use Cases
+- [Please describe specific use cases]
+
+## Required Tools
+- [List required tools like Read, Write, Edit, etc.]
+
+## Additional Details
+- No existing agents found matching: "${query}"
+- Please consider adding this agent to help users with this use case.`);
+                            const createIssueUrl = `https://github.com/hongsw/claude-agents-power-mcp-server/issues/new?title=${issueTitle}&body=${issueBodyContent}&labels=agent-request`;
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: true,
+                                            count: 0,
+                                            agents: [],
+                                            message: `🔍 No agents found for "${query}"`,
+                                            suggestion: '📝 You can request this agent by creating an issue:',
+                                            createIssueUrl,
+                                            tip: '💡 Set autoCreateIssue=true to automatically create issues when agents are not found.',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
                         }
                         return {
                             content: [

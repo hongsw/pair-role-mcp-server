@@ -10,9 +10,9 @@ export function initializeAnalytics(): PostHog | null {
   const apiKey = process.env.POSTHOG_API_KEY || defaultApiKey;
   const host = process.env.POSTHOG_HOST || 'https://app.posthog.com';
   
-  // Allow disabling analytics by setting DISABLE_ANALYTICS=true
-  if (process.env.DISABLE_ANALYTICS === 'true') {
-    console.error('[MCP Sub-Agents] Analytics disabled by environment variable.');
+  // Allow disabling analytics by setting DISABLE_ANALYTICS=true or DISABLE_TELEMETRY=true
+  if (process.env.DISABLE_ANALYTICS === 'true' || process.env.DISABLE_TELEMETRY === 'true') {
+    console.error('[MCP Sub-Agents] Analytics/telemetry disabled by environment variable.');
     return null;
   }
 

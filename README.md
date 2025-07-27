@@ -148,6 +148,39 @@ Add to your `~/.config/claude/mcp_servers.json`:
 }
 ```
 
+### Analytics & Telemetry
+
+This tool includes anonymous usage analytics (telemetry) to help improve the user experience and identify common usage patterns. The telemetry system:
+
+- **What is collected**: Tool usage patterns, command frequency, error rates (no personal data)
+- **What is NOT collected**: File contents, agent data, GitHub tokens, or any personally identifiable information
+- **Purpose**: Understanding which features are most used, identifying common errors, improving performance
+- **Technology**: Uses PostHog with a public API key that can only send events, not read data
+
+#### Disabling Telemetry
+
+If you prefer not to send anonymous usage data, you can disable telemetry using either of these methods:
+
+```bash
+# Method 1: Environment variable
+export DISABLE_TELEMETRY=true
+
+# Method 2: In your .env file
+DISABLE_TELEMETRY=true
+
+# Alternative (also works)
+DISABLE_ANALYTICS=true
+```
+
+#### Telemetry vs OpenTelemetry
+
+This project uses **product analytics telemetry** (PostHog), not OpenTelemetry:
+
+- **Product Analytics Telemetry**: Tracks user interactions, feature usage, and product metrics
+- **OpenTelemetry**: Industry standard for distributed tracing, metrics, and logs in microservices
+
+While both involve "telemetry", they serve different purposes. Our telemetry helps understand how the tool is used to improve the user experience, not for system monitoring or performance tracing.
+
 ### Environment Variables
 
 Configure these optional environment variables for enhanced functionality:
@@ -178,10 +211,10 @@ Add environment variables directly to your MCP server configuration as shown abo
   - Create at: https://github.com/settings/tokens
   - Required permissions: `public_repo` or `repo` (for private repos)
   
-- **`DISABLE_ANALYTICS`**: Set to `true` to disable anonymous usage analytics
-  - Analytics is enabled by default to help improve the tool
-  - No personal data is collected, only tool usage metrics
-  - Example: `DISABLE_ANALYTICS=true`
+- **`DISABLE_TELEMETRY`** or **`DISABLE_ANALYTICS`**: Set to `true` to disable anonymous usage telemetry
+  - Telemetry is enabled by default to help improve the tool
+  - No personal data is collected, only anonymous usage metrics
+  - Example: `DISABLE_TELEMETRY=true`
 
 - **`POSTHOG_API_KEY`**: Custom PostHog API key (optional)
   - The tool includes a default public key for analytics

@@ -51,7 +51,7 @@
 
 ```bash
 # 저장소 클론
-git clone https://github.com/yourusername/claude-agents-power-mcp-server.git
+git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
 cd claude-agents-power-mcp-server
 
 # 의존성 설치
@@ -219,7 +219,7 @@ mcp__pair-role__install-agents [
 
 ### 소스에서 빌드
 ```bash
-git clone https://github.com/yourusername/claude-agents-power-mcp-server.git
+git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
 cd claude-agents-power-mcp-server
 npm install
 npm run build
@@ -265,7 +265,7 @@ claude-agents-power-mcp-server/
 
 **⭐ 이 저장소가 유용하다면 스타를 눌러주세요!**
 
-[🐛 버그 신고](https://github.com/yourusername/claude-agents-power-mcp-server/issues) • [✨ 기능 요청](https://github.com/yourusername/claude-agents-power-mcp-server/issues) • [📖 문서](docs/)
+[🐛 버그 신고](https://github.com/hongsw/claude-agents-power-mcp-server/issues) • [✨ 기능 요청](https://github.com/hongsw/claude-agents-power-mcp-server/issues) • [📖 문서](docs/)
 
 Claude Code 커뮤니티를 위해 ❤️로 만들어졌습니다
 

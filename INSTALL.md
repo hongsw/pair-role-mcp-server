@@ -9,7 +9,7 @@ npm install -g claude-agents-power
 ## 2. 소스에서 빌드 (개발용)
 
 ```bash
-git clone https://github.com/hongsw/claude-agents-power.git
+git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
 cd claude-agents-power
 npm install
 npm run build

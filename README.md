@@ -119,7 +119,7 @@ Now you can use specialized roles in Claude:
 
 ```bash
 # Clone the repository
-git clone https://github.com/hongsw/claude-agents-power.git
+git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
 cd claude-agents-power
 
 # Install dependencies
@@ -439,7 +439,7 @@ mcp__claude-agents-power__install-agents [
 
 ### Build from Source
 ```bash
-git clone https://github.com/hongsw/claude-agents-power.git
+git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
 cd claude-agents-power
 npm install
 npm run build
@@ -490,7 +490,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ Star this repository if you find it useful!**
 
-[🐛 Report Bug](https://github.com/hongsw/claude-agents-power/issues) • [✨ Request Feature](https://github.com/hongsw/claude-agents-power/issues) • [📖 Documentation](docs/)
+[🐛 Report Bug](https://github.com/hongsw/claude-agents-power-mcp-server/issues) • [✨ Request Feature](https://github.com/hongsw/claude-agents-power-mcp-server/issues) • [📖 Documentation](docs/)
 
 Made with ❤️ for the Claude Code community
 

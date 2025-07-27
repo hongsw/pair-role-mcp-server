@@ -119,7 +119,7 @@ ls ./claude/agents/
 
 ```bash
 # 저장소 클론
-git clone https://github.com/hongsw/claude-agents-power.git
+git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
 cd claude-agents-power
 
 # 종속성 설치
@@ -366,7 +366,7 @@ claude-agents-power/
 
 **⭐ 이 저장소가 유용하다면 별표를 눌러주세요!**
 
-[🐛 버그 신고](https://github.com/hongsw/claude-agents-power/issues) • [✨ 기능 요청](https://github.com/hongsw/claude-agents-power/issues) • [📖 문서](docs/)
+[🐛 버그 신고](https://github.com/hongsw/claude-agents-power-mcp-server/issues) • [✨ 기능 요청](https://github.com/hongsw/claude-agents-power-mcp-server/issues) • [📖 문서](docs/)
 
 Claude Code 커뮤니티를 위해 ❤️로 제작되었습니다
 

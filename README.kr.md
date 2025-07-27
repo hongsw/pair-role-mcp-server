@@ -347,6 +347,143 @@ claude-agents-power/
 3. **프로젝트 템플릿 추가** - 산업별 템플릿 기여
 4. **문서** - 가이드 및 예시 개선
 
+## 🔍 필요한 에이전트를 찾을 수 없나요?
+
+원하는 특정 에이전트 역할을 찾을 수 없다면, 다음과 같이 요청하거나 직접 만들 수 있습니다:
+
+### 📋 새 에이전트 요청하기
+
+1. **먼저 기존 에이전트 확인**
+   ```bash
+   # MCP를 사용하여 에이전트 검색
+   claude-agents-power agents --action search --query "역할명"
+   ```
+
+2. **Issue 제출**
+   - [GitHub Issues](https://github.com/hongsw/claude-agents-power-mcp-server/issues)로 이동
+   - "New Issue" 클릭
+   - 제목 형식: `[Agent Request] 역할명 - 간단한 설명`
+   - 포함 내용:
+     - 역할명 (예: `blockchain-architect`)
+     - 책임 설명
+     - 필요한 도구
+     - 사용 사례
+
+### 🛠️ 직접 에이전트 만들기
+
+#### 에이전트 파일 형식
+
+`claude/agents/{언어}/` 디렉토리에 새 `.md` 파일을 만드세요:
+
+```markdown
+---
+name: your-agent-name
+description: 에이전트의 전문성과 책임에 대한 간단한 설명
+tools: Read, Write, Edit, Bash, WebSearch
+---
+
+당신은 [도메인/전문 분야]를 전문으로 하는 [역할 제목]입니다.
+
+## 핵심 책임
+- 주요 책임 1
+- 주요 책임 2
+- 주요 책임 3
+
+## 주요 실천 사항
+- 모범 사례 또는 방법론 1
+- 모범 사례 또는 방법론 2
+- 모범 사례 또는 방법론 3
+
+## 도구 및 기술
+- 사용하는 특정 도구 또는 프레임워크
+- 전문 기술
+- 작업하는 플랫폼
+
+## 품질 기준
+- 품질 지표 또는 표준 1
+- 품질 지표 또는 표준 2
+- 성능 기대치
+```
+
+#### 사용 가능한 도구
+
+에이전트에 적합한 도구를 선택하세요:
+- **Read, Write, Edit, MultiEdit** - 파일 작업
+- **Bash, Grep, Glob** - 시스템 작업
+- **WebSearch, WebFetch** - 인터넷 접근
+- **TodoWrite, Task** - 작업 관리
+- **NotebookRead, NotebookEdit** - Jupyter 노트북 지원
+
+#### 예시: 블록체인 아키텍트 에이전트 만들기
+
+`claude/agents/ko/blockchain-architect.md`:
+```markdown
+---
+name: blockchain-architect
+description: 확장 가능한 DLT 솔루션과 스마트 컨트랙트 아키텍처를 설계하는 블록체인 시스템 아키텍트
+tools: Read, Write, Edit, Bash, WebSearch
+---
+
+당신은 분산원장 기술과 탈중앙화 시스템을 전문으로 하는 블록체인 아키텍트입니다.
+
+## 핵심 책임
+- 블록체인 네트워크 아키텍처 설계
+- 스마트 컨트랙트 시스템 개발
+- 합의 메커니즘 구현
+- 보안성과 확장성 보장
+
+## 주요 실천 사항
+- 보안 우선 설계 원칙 준수
+- 가스 효율성 최적화
+- 적절한 접근 제어 구현
+- 업그레이드 가능한 컨트랙트 설계
+- 크로스체인 호환성 보장
+
+## 도구 및 기술
+- 이더리움, 폴리곤, 솔라나
+- Solidity, Rust, Move
+- Web3.js, Ethers.js
+- Hardhat, Truffle, Foundry
+- IPFS, The Graph
+
+## 품질 기준
+- 스마트 컨트랙트 100% 테스트 커버리지
+- 가스 최적화 벤치마크
+- 보안 감사 준수
+- 필요시 형식 검증
+```
+
+### 📤 에이전트 제출하기
+
+1. **저장소 포크**
+   ```bash
+   git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
+   cd claude-agents-power-mcp-server
+   ```
+
+2. **에이전트 파일 생성**
+   ```bash
+   # 영어 에이전트
+   touch claude/agents/en/your-agent-name.md
+   
+   # 한국어 에이전트
+   touch claude/agents/ko/your-agent-name.md
+   ```
+
+3. **Pull Request 제출**
+   - 변경사항 커밋
+   - 포크에 푸시
+   - 설명과 함께 PR 생성
+   - 검토 후 병합됩니다!
+
+### 💡 에이전트 생성 팁
+
+1. **구체적으로 작성**: 역할의 전문성과 경계를 명확히 정의
+2. **도구를 현명하게 선택**: 에이전트가 실제로 필요한 도구만 포함
+3. **예시 포함**: 구체적인 방법론이나 프레임워크 추가
+4. **현지화 고려**: 여러 언어로 번역 제공
+5. **에이전트 테스트**: 실제 작업에서 잘 작동하는지 확인
+
 ### 🚀 로드맵
 - [x] 에이전트 템플릿을 위한 GitHub 통합
 - [x] 다운로드 추적 및 분석

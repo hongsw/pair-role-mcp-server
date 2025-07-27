@@ -471,6 +471,143 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 3. **Add Project Templates** - Contribute industry-specific templates
 4. **Documentation** - Improve guides and examples
 
+## 🔍 Can't Find the Agent You Need?
+
+If you can't find a specific agent role you're looking for, here's how to request or create one:
+
+### 📋 Request a New Agent
+
+1. **Check Existing Agents First**
+   ```bash
+   # Search for agents using MCP
+   claude-agents-power agents --action search --query "your-role"
+   ```
+
+2. **Submit an Issue**
+   - Go to [GitHub Issues](https://github.com/hongsw/claude-agents-power-mcp-server/issues)
+   - Click "New Issue"
+   - Use title format: `[Agent Request] Role Name - Brief Description`
+   - Include:
+     - Role name (e.g., `blockchain-architect`)
+     - Description of responsibilities
+     - Required tools
+     - Use cases
+
+### 🛠️ Create Your Own Agent
+
+#### Agent File Format
+
+Create a new `.md` file in `claude/agents/{language}/` directory:
+
+```markdown
+---
+name: your-agent-name
+description: Brief description of the agent's expertise and responsibilities
+tools: Read, Write, Edit, Bash, WebSearch
+---
+
+You are a [role title] specializing in [domain/expertise].
+
+## Core Responsibilities
+- Primary responsibility 1
+- Primary responsibility 2
+- Primary responsibility 3
+
+## Key Practices
+- Best practice or methodology 1
+- Best practice or methodology 2
+- Best practice or methodology 3
+
+## Tools and Technologies
+- Specific tools or frameworks used
+- Technologies you're expert in
+- Platforms you work with
+
+## Quality Standards
+- Quality metric or standard 1
+- Quality metric or standard 2
+- Performance expectations
+```
+
+#### Available Tools
+
+Choose appropriate tools for your agent:
+- **Read, Write, Edit, MultiEdit** - File operations
+- **Bash, Grep, Glob** - System operations
+- **WebSearch, WebFetch** - Internet access
+- **TodoWrite, Task** - Task management
+- **NotebookRead, NotebookEdit** - Jupyter notebook support
+
+#### Example: Creating a Blockchain Architect Agent
+
+`claude/agents/en/blockchain-architect.md`:
+```markdown
+---
+name: blockchain-architect
+description: Blockchain system architect designing scalable DLT solutions and smart contract architectures
+tools: Read, Write, Edit, Bash, WebSearch
+---
+
+You are a blockchain architect specializing in distributed ledger technology and decentralized systems.
+
+## Core Responsibilities
+- Design blockchain network architectures
+- Develop smart contract systems
+- Implement consensus mechanisms
+- Ensure security and scalability
+
+## Key Practices
+- Follow security-first design principles
+- Optimize for gas efficiency
+- Implement proper access controls
+- Design upgradeable contracts
+- Ensure cross-chain compatibility
+
+## Tools and Technologies
+- Ethereum, Polygon, Solana
+- Solidity, Rust, Move
+- Web3.js, Ethers.js
+- Hardhat, Truffle, Foundry
+- IPFS, The Graph
+
+## Quality Standards
+- 100% test coverage for smart contracts
+- Gas optimization benchmarks
+- Security audit compliance
+- Formal verification when applicable
+```
+
+### 📤 Submit Your Agent
+
+1. **Fork the Repository**
+   ```bash
+   git clone https://github.com/hongsw/claude-agents-power-mcp-server.git
+   cd claude-agents-power-mcp-server
+   ```
+
+2. **Create Your Agent File**
+   ```bash
+   # For English agents
+   touch claude/agents/en/your-agent-name.md
+   
+   # For Korean agents
+   touch claude/agents/ko/your-agent-name.md
+   ```
+
+3. **Submit a Pull Request**
+   - Commit your changes
+   - Push to your fork
+   - Create a PR with description
+   - We'll review and merge!
+
+### 💡 Agent Creation Tips
+
+1. **Be Specific**: Clearly define the role's expertise and boundaries
+2. **Choose Tools Wisely**: Only include tools the agent actually needs
+3. **Include Examples**: Add specific methodologies or frameworks
+4. **Consider Localization**: Provide translations for multiple languages
+5. **Test Your Agent**: Ensure it works well with real tasks
+
 ### 🚀 Roadmap
 - [x] GitHub integration for agent templates
 - [x] Download tracking and analytics

@@ -153,6 +153,28 @@ npm run build
 
 향상된 기능을 위한 선택적 환경 변수 설정:
 
+#### 방법 1: .env 파일 사용 (로컬 개발 권장)
+
+1. 예제 환경 파일 복사:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. `.env` 파일을 편집하여 값 추가:
+   ```bash
+   # GitHub 개인 액세스 토큰
+   GITHUB_TOKEN=ghp_실제_토큰_입력
+   
+   # PostHog API 키
+   POSTHOG_API_KEY=phc_실제_키_입력
+   ```
+
+#### 방법 2: MCP 설정 사용
+
+위에 표시된 대로 MCP 서버 구성에 환경 변수를 직접 추가합니다.
+
+#### 사용 가능한 변수
+
 - **`GITHUB_TOKEN`**: 에이전트를 찾을 수 없을 때 자동 이슈 생성을 위한 GitHub 개인 액세스 토큰
   - 생성 위치: https://github.com/settings/tokens
   - 필요한 권한: `public_repo` 또는 `repo` (비공개 저장소의 경우)

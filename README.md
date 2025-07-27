@@ -153,6 +153,28 @@ Add to your `~/.config/claude/mcp_servers.json`:
 
 Configure these optional environment variables for enhanced functionality:
 
+#### Method 1: Using .env file (Recommended for local development)
+
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and add your values:
+   ```bash
+   # GitHub Personal Access Token
+   GITHUB_TOKEN=ghp_your_actual_token_here
+   
+   # PostHog API Key
+   POSTHOG_API_KEY=phc_your_actual_key_here
+   ```
+
+#### Method 2: Using MCP configuration
+
+Add environment variables directly to your MCP server configuration as shown above.
+
+#### Available Variables
+
 - **`GITHUB_TOKEN`**: GitHub personal access token for automatic issue creation when agents are not found
   - Create at: https://github.com/settings/tokens
   - Required permissions: `public_repo` or `repo` (for private repos)

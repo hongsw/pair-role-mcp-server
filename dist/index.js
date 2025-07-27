@@ -11,6 +11,9 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
 import os from 'os';
+import dotenv from 'dotenv';
+// Load environment variables from .env file
+dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Parse CLI arguments using commander

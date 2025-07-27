@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, } from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema, ListResourcesRequestSchema, ReadResourceRequestSchema, } from '@modelcontextprotocol/sdk/types.js';
 import { Command } from 'commander';
 import { ProjectAnalyzer } from './projectAnalyzer.js';
 import { AgentManager } from './agentManager.js';
@@ -130,10 +130,11 @@ const TRANSPORT_TYPE = 'stdio';
 function createServerInstance() {
     const server = new Server({
         name: 'claude-agents-power-mcp-server',
-        version: '1.0.0',
+        version: '1.2.4',
     }, {
         capabilities: {
             tools: {},
+            resources: {},
         },
     });
     return server;
@@ -167,6 +168,364 @@ const agentManager = new AgentManager(agentsPath, {
 }, cliOptions.debug || false);
 // Function to setup tools for a server instance
 function setupTools(server, projectAnalyzer, agentManager) {
+    // Define resources
+    server.setRequestHandler(ListResourcesRequestSchema, async () => {
+        return {
+            resources: [
+                {
+                    uri: 'mcp://claude-agents-power/how-it-works',
+                    name: 'MCP 동작 원리',
+                    description: 'Claude Agents Power MCP 서버의 동작 원리와 구조 설명',
+                    mimeType: 'text/markdown',
+                },
+                {
+                    uri: 'mcp://claude-agents-power/tool-guide',
+                    name: '도구 사용 가이드',
+                    description: '통합된 3개 도구의 사용 방법과 예제',
+                    mimeType: 'text/markdown',
+                },
+                {
+                    uri: 'mcp://claude-agents-power/agent-structure',
+                    name: '에이전트 구조',
+                    description: '에이전트 파일 구조와 다국어 지원 설명',
+                    mimeType: 'text/markdown',
+                },
+            ],
+        };
+    });
+    server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+        const { uri } = request.params;
+        switch (uri) {
+            case 'mcp://claude-agents-power/how-it-works':
+                return {
+                    contents: [
+                        {
+                            uri,
+                            mimeType: 'text/markdown',
+                            text: `# Claude Agents Power MCP 서버 동작 원리
+
+## 개요
+Claude Agents Power는 Model Context Protocol(MCP)을 사용하여 100개 이상의 전문 에이전트를 Claude에서 사용할 수 있게 해주는 서버입니다.
+
+## MCP (Model Context Protocol) 란?
+MCP는 Claude와 같은 LLM이 외부 도구와 리소스에 접근할 수 있게 해주는 표준 프로토콜입니다.
+
+### 주요 구성 요소:
+1. **Tools (도구)**: Claude가 실행할 수 있는 함수들
+2. **Resources (리소스)**: Claude가 읽을 수 있는 문서나 데이터
+3. **Prompts (프롬프트)**: 미리 정의된 프롬프트 템플릿
+
+## 서버 아키텍처
+
+### 1. 에이전트 매니저 (AgentManager)
+- 에이전트 파일 로딩 및 캐싱
+- 다국어 지원 (en, ko, ja, zh)
+- GitHub에서 에이전트 동적 로딩
+
+### 2. 프로젝트 분석기 (ProjectAnalyzer)
+- 프로젝트 구조 분석
+- 적합한 에이전트 추천
+- 키워드 기반 매칭
+
+### 3. 통합 도구 시스템
+기존 8개 도구를 3개로 통합:
+- \`analyze-project\`: 프로젝트 분석
+- \`agents\`: 에이전트 검색/목록/상세/추천
+- \`manage-agents\`: 설치/통계/새로고침
+
+## 데이터 흐름
+
+\`\`\`
+Claude Desktop → MCP Protocol → Agent Manager → Local Files
+                                            ↓
+                              GitHub Repository (fallback)
+\`\`\`
+
+## 에이전트 로딩 과정
+
+1. **시작시**: \`claude/agents/{언어}/\` 디렉토리에서 에이전트 로드
+2. **요청시**: 캐시에서 빠른 검색
+3. **미발견시**: GitHub에서 동적 다운로드
+4. **설치**: 프로젝트 디렉토리에 에이전트 파일 복사
+
+## 성능 최적화
+
+- 메모리 캐싱으로 빠른 응답
+- YAML frontmatter 파싱으로 메타데이터 추출
+- 언어별 키 매핑으로 효율적인 검색
+`,
+                        },
+                    ],
+                };
+            case 'mcp://claude-agents-power/tool-guide':
+                return {
+                    contents: [
+                        {
+                            uri,
+                            mimeType: 'text/markdown',
+                            text: `# 도구 사용 가이드
+
+## 통합된 3개 도구 사용법
+
+### 1. analyze-project
+프로젝트 디렉토리를 분석하여 적합한 에이전트를 추천합니다.
+
+**사용법:**
+\`\`\`json
+{
+  "tool": "analyze-project",
+  "arguments": {
+    "projectPath": "/path/to/project"
+  }
+}
+\`\`\`
+
+### 2. agents
+에이전트 관련 모든 작업을 처리하는 통합 도구입니다.
+
+#### 2.1 검색 (search)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "search",
+    "query": "frontend",
+    "language": "en"
+  }
+}
+\`\`\`
+
+#### 2.2 목록 조회 (list)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "list",
+    "language": "ko",
+    "category": "development"
+  }
+}
+\`\`\`
+
+#### 2.3 상세 정보 (details)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "details",
+    "query": "frontend-developer",
+    "language": "en"
+  }
+}
+\`\`\`
+
+#### 2.4 추천 (recommend)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "recommend",
+    "keywords": ["react", "typescript", "ui"]
+  }
+}
+\`\`\`
+
+#### 2.5 검색 (자동 Issue 생성)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "search",
+    "query": "blockchain-architect",
+    "language": "en",
+    "autoCreateIssue": true,
+    "issueBody": "We need a blockchain architect for smart contract development"
+  }
+}
+\`\`\`
+
+#### 2.6 요청 (request)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "request",
+    "query": "ai-ethics-officer",
+    "language": "en",
+    "issueBody": "Need an AI ethics specialist for responsible AI development"
+  }
+}
+\`\`\`
+
+### 3. manage-agents
+에이전트 관리 작업을 처리합니다.
+
+#### 3.1 설치 (install)
+\`\`\`json
+{
+  "tool": "manage-agents",
+  "arguments": {
+    "action": "install",
+    "agentNames": ["frontend-developer", "backend-engineer"],
+    "targetPath": "/path/to/project",
+    "language": "en"
+  }
+}
+\`\`\`
+
+#### 3.2 통계 (stats)
+\`\`\`json
+{
+  "tool": "manage-agents",
+  "arguments": {
+    "action": "stats",
+    "limit": 10
+  }
+}
+\`\`\`
+
+#### 3.3 새로고침 (refresh)
+\`\`\`json
+{
+  "tool": "manage-agents",
+  "arguments": {
+    "action": "refresh"
+  }
+}
+\`\`\`
+
+## 언어 지원
+- \`en\`: English
+- \`ko\`: 한국어 
+- \`ja\`: 日本語
+- \`zh\`: 中文
+
+## 카테고리
+- development, data, design, management
+- marketing, operations, hr, finance
+- legal, research, healthcare, education
+- media, manufacturing, other
+`,
+                        },
+                    ],
+                };
+            case 'mcp://claude-agents-power/agent-structure':
+                return {
+                    contents: [
+                        {
+                            uri,
+                            mimeType: 'text/markdown',
+                            text: `# 에이전트 구조
+
+## 파일 구조
+\`\`\`
+claude/agents/
+├── en/          # 영어 에이전트
+│   ├── frontend-developer.md
+│   ├── backend-engineer.md
+│   └── ...
+├── ko/          # 한국어 에이전트
+│   ├── frontend-developer.md
+│   ├── backend-engineer.md
+│   └── ...
+├── ja/          # 일본어 에이전트
+└── zh/          # 중국어 에이전트
+\`\`\`
+
+## 에이전트 파일 형식
+
+각 에이전트 파일은 YAML frontmatter와 Markdown 콘텐츠로 구성됩니다:
+
+\`\`\`markdown
+---
+name: frontend-developer
+description: UI/UX implementation specialist with React, Vue, and modern web technologies expertise.
+tools: Read, Write, Edit, MultiEdit, Bash, WebSearch
+---
+
+You are a frontend engineer specializing in modern web applications.
+
+Focus areas:
+- Build responsive and accessible interfaces
+- Implement state management solutions
+- Optimize performance and bundle sizes
+- Ensure cross-browser compatibility
+- Write maintainable component architectures
+
+Key practices:
+- Follow semantic HTML standards
+- Implement WCAG accessibility guidelines
+- Use modern CSS features (Grid, Flexbox)
+- Optimize for Core Web Vitals
+- Write comprehensive tests
+\`\`\`
+
+## 메타데이터 필드
+
+### name (필수)
+에이전트의 고유 식별자입니다. 파일명과 일치해야 합니다.
+
+### description (필수)
+에이전트의 역할과 전문성을 설명합니다. 검색에 사용됩니다.
+
+### tools (필수)
+에이전트가 사용할 수 있는 도구 목록입니다.
+
+**사용 가능한 도구:**
+- Read, Write, Edit, MultiEdit
+- Bash, Grep, Glob
+- WebSearch, WebFetch
+- TodoWrite, Task
+- NotebookRead, NotebookEdit
+
+## 다국어 지원
+
+### 언어별 키 매핑
+- 영어: \`agent-name\`
+- 기타 언어: \`agent-name-{언어코드}\`
+
+예: 
+- \`frontend-developer\` (영어)
+- \`frontend-developer-ko\` (한국어)
+- \`frontend-developer-ja\` (일본어)
+
+### 언어 감지
+1. 요청된 언어에 따른 에이전트 검색
+2. 해당 언어가 없으면 영어 버전 사용
+3. 모두 없으면 GitHub에서 다운로드 시도
+
+## 에이전트 품질 기준
+
+### 필수 요소
+1. 명확한 역할 정의
+2. 구체적인 책임 범위
+3. 실용적인 가이드라인
+4. 도구 적절한 선택
+
+### 권장 구조
+1. 역할 소개
+2. 핵심 활동/책임
+3. 주요 관행
+4. 품질 기준
+5. 협업 방식
+
+## 에이전트 생성 가이드
+
+새 에이전트를 만들 때:
+
+1. 기존 에이전트 참고
+2. 일관된 형식 유지
+3. 언어별 번역 제공
+4. 적절한 도구 선택
+5. 구체적이고 실용적인 내용 작성
+`,
+                        },
+                    ],
+                };
+            default:
+                throw new Error(`Unknown resource: ${uri}`);
+        }
+    });
     // Define tools
     server.setRequestHandler(ListToolsRequestSchema, async () => {
         return {
@@ -186,130 +545,83 @@ function setupTools(server, projectAnalyzer, agentManager) {
                     },
                 },
                 {
-                    name: 'search-agents',
-                    description: 'Search for agents by keyword or name',
+                    name: 'agents',
+                    description: 'Search, list, get details, recommend agents, or request new ones',
                     inputSchema: {
                         type: 'object',
                         properties: {
+                            action: {
+                                type: 'string',
+                                description: 'Action to perform',
+                                enum: ['search', 'list', 'details', 'recommend', 'request'],
+                            },
                             query: {
                                 type: 'string',
-                                description: 'Search query for agents',
+                                description: 'Search query (for search action) or agent name (for details action)',
+                            },
+                            keywords: {
+                                type: 'array',
+                                items: { type: 'string' },
+                                description: 'Keywords for recommendation (for recommend action)',
                             },
                             language: {
                                 type: 'string',
-                                description: 'Language preference (en, ko)',
-                                enum: ['en', 'ko'],
-                                default: 'en',
-                            },
-                        },
-                        required: ['query'],
-                    },
-                },
-                {
-                    name: 'list-agents',
-                    description: 'List all available agents',
-                    inputSchema: {
-                        type: 'object',
-                        properties: {
-                            language: {
-                                type: 'string',
-                                description: 'Language preference (en, ko)',
-                                enum: ['en', 'ko'],
+                                description: 'Language preference',
+                                enum: ['en', 'ko', 'ja', 'zh'],
                                 default: 'en',
                             },
                             category: {
                                 type: 'string',
-                                description: 'Filter by category',
+                                description: 'Filter by category (for list action)',
                                 enum: ['development', 'data', 'design', 'management', 'marketing', 'operations', 'hr', 'finance', 'legal', 'research', 'healthcare', 'education', 'media', 'manufacturing', 'other'],
                             },
+                            autoCreateIssue: {
+                                type: 'boolean',
+                                description: 'Auto-create GitHub issue if no agents found (for search action)',
+                                default: false,
+                            },
+                            issueBody: {
+                                type: 'string',
+                                description: 'Additional details for the issue (when autoCreateIssue is true)',
+                            },
                         },
+                        required: ['action'],
                     },
                 },
                 {
-                    name: 'get-agent-details',
-                    description: 'Get detailed information about a specific agent',
+                    name: 'manage-agents',
+                    description: 'Install agents, get stats, or refresh from GitHub',
                     inputSchema: {
                         type: 'object',
                         properties: {
-                            agentName: {
+                            action: {
                                 type: 'string',
-                                description: 'Name of the agent (e.g., frontend-developer)',
+                                description: 'Management action to perform',
+                                enum: ['install', 'stats', 'refresh'],
                             },
-                            language: {
-                                type: 'string',
-                                description: 'Language preference (en, ko)',
-                                enum: ['en', 'ko'],
-                                default: 'en',
-                            },
-                        },
-                        required: ['agentName'],
-                    },
-                },
-                {
-                    name: 'install-agents',
-                    description: 'Install multiple sub-agents to a project directory',
-                    inputSchema: {
-                        type: 'object',
-                        properties: {
                             agentNames: {
                                 type: 'array',
-                                items: {
-                                    type: 'string',
-                                },
-                                description: 'List of agent names to install',
+                                items: { type: 'string' },
+                                description: 'Agent names to install (for install action)',
                             },
                             targetPath: {
                                 type: 'string',
-                                description: 'Target project directory path',
+                                description: 'Target directory for installation (for install action)',
                             },
                             language: {
                                 type: 'string',
-                                description: 'Language preference for agents (en, ko)',
-                                enum: ['en', 'ko'],
+                                description: 'Language preference for agents',
+                                enum: ['en', 'ko', 'ja', 'zh'],
                                 default: 'en',
                             },
-                        },
-                        required: ['agentNames', 'targetPath'],
-                    },
-                },
-                {
-                    name: 'recommend-by-keywords',
-                    description: 'Recommend agents based on project keywords',
-                    inputSchema: {
-                        type: 'object',
-                        properties: {
-                            keywords: {
-                                type: 'array',
-                                items: {
-                                    type: 'string',
-                                },
-                                description: 'List of project keywords (e.g., api, database, ui)',
-                            },
-                        },
-                        required: ['keywords'],
-                    },
-                },
-                {
-                    name: 'get-download-stats',
-                    description: 'Get download statistics for agents',
-                    inputSchema: {
-                        type: 'object',
-                        properties: {
                             limit: {
                                 type: 'number',
-                                description: 'Number of top agents to show',
-                                default: 10
-                            }
-                        }
-                    }
-                },
-                {
-                    name: 'refresh-agents',
-                    description: 'Refresh agents from GitHub repository',
-                    inputSchema: {
-                        type: 'object',
-                        properties: {}
-                    }
+                                description: 'Number of top agents to show in stats',
+                                default: 10,
+                            },
+                        },
+                        required: ['action'],
+                    },
                 },
             ],
         };
@@ -334,193 +646,454 @@ function setupTools(server, projectAnalyzer, agentManager) {
                     ],
                 };
             }
-            case 'search-agents': {
-                const { query, language = 'en' } = args;
-                const agents = agentManager.searchAgents(query);
-                const filteredAgents = agents.filter(agent => !language || agent.language === language);
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: JSON.stringify({
-                                success: true,
-                                count: filteredAgents.length,
-                                agents: filteredAgents.map(agent => ({
-                                    name: agent.name,
-                                    description: agent.description,
-                                    tools: agent.tools,
-                                    language: agent.language,
-                                })),
-                            }, null, 2),
-                        },
-                    ],
-                };
-            }
-            case 'list-agents': {
-                const { language = 'en', category } = args;
-                let agents = agentManager.getAllAgents(language);
-                // Filter by category if provided
-                if (category) {
-                    agents = agents.filter(agent => {
-                        // Simple category matching based on agent name or description
-                        const categoryKeywords = {
-                            development: ['developer', 'engineer', 'architect'],
-                            data: ['data', 'analyst', 'scientist'],
-                            design: ['designer', 'ux', 'ui'],
-                            management: ['manager', 'owner', 'master'],
-                            // Add more category mappings as needed
-                        };
-                        const keywords = categoryKeywords[category] || [];
-                        return keywords.some(keyword => agent.name.includes(keyword) ||
-                            agent.description.toLowerCase().includes(keyword));
-                    });
-                }
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: JSON.stringify({
-                                success: true,
-                                count: agents.length,
-                                agents: agents.map(agent => ({
-                                    name: agent.name,
-                                    description: agent.description,
-                                    tools: agent.tools,
-                                    language: agent.language,
-                                })),
-                            }, null, 2),
-                        },
-                    ],
-                };
-            }
-            case 'get-agent-details': {
-                const { agentName, language = 'en' } = args;
-                const agent = agentManager.getAgent(agentName, language);
-                if (!agent) {
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: JSON.stringify({
-                                    success: false,
-                                    error: `Agent '${agentName}' not found in language '${language}'`,
-                                }, null, 2),
-                            },
-                        ],
-                    };
-                }
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: JSON.stringify({
-                                success: true,
-                                agent: {
-                                    name: agent.name,
-                                    description: agent.description,
-                                    tools: agent.tools,
-                                    language: agent.language,
-                                    content: agent.content,
+            case 'agents': {
+                const { action, query, keywords, language = 'en', category, autoCreateIssue = false, issueBody } = args;
+                switch (action) {
+                    case 'search': {
+                        if (!query) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: 'Query is required for search action',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        const agents = agentManager.searchAgents(query);
+                        const filteredAgents = agents.filter(agent => !language || agent.language === language);
+                        // Auto-create issue if no agents found and autoCreateIssue is true
+                        if (filteredAgents.length === 0 && autoCreateIssue) {
+                            const githubToken = process.env.GITHUB_TOKEN;
+                            if (!githubToken) {
+                                return {
+                                    content: [
+                                        {
+                                            type: 'text',
+                                            text: JSON.stringify({
+                                                success: false,
+                                                error: 'No agents found. GitHub token not configured for auto-issue creation. Set GITHUB_TOKEN environment variable.',
+                                                suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                                            }, null, 2),
+                                        },
+                                    ],
+                                };
+                            }
+                            try {
+                                const issueTitle = `[Agent Request] ${query} - New agent needed`;
+                                const issueBodyContent = `## Agent Request
+
+**Role Name**: ${query}
+**Language**: ${language}
+
+## Description
+${issueBody || 'A new agent is needed for this role.'}
+
+## Use Cases
+- [Please describe specific use cases]
+
+## Required Tools
+- [List required tools like Read, Write, Edit, etc.]
+
+## Additional Details
+- Requested via MCP server auto-issue creation
+- No existing agents found matching: "${query}"
+
+---
+*This issue was automatically created by claude-agents-power MCP server*`;
+                                const response = await fetch('https://api.github.com/repos/hongsw/claude-agents-power-mcp-server/issues', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `token ${githubToken}`,
+                                        'Accept': 'application/vnd.github+json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        title: issueTitle,
+                                        body: issueBodyContent,
+                                        labels: ['agent-request', 'auto-created'],
+                                    }),
+                                });
+                                if (!response.ok) {
+                                    throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+                                }
+                                const issue = await response.json();
+                                return {
+                                    content: [
+                                        {
+                                            type: 'text',
+                                            text: JSON.stringify({
+                                                success: true,
+                                                count: 0,
+                                                message: `No agents found for "${query}". Created GitHub issue #${issue.number}`,
+                                                issueUrl: issue.html_url,
+                                                issueNumber: issue.number,
+                                            }, null, 2),
+                                        },
+                                    ],
+                                };
+                            }
+                            catch (error) {
+                                return {
+                                    content: [
+                                        {
+                                            type: 'text',
+                                            text: JSON.stringify({
+                                                success: false,
+                                                count: 0,
+                                                error: `Failed to create issue: ${error}`,
+                                                suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                                            }, null, 2),
+                                        },
+                                    ],
+                                };
+                            }
+                        }
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: true,
+                                        count: filteredAgents.length,
+                                        agents: filteredAgents.map(agent => ({
+                                            name: agent.name,
+                                            description: agent.description,
+                                            tools: agent.tools,
+                                            language: agent.language,
+                                        })),
+                                    }, null, 2),
                                 },
-                            }, null, 2),
-                        },
-                    ],
-                };
-            }
-            case 'install-agents': {
-                const { agentNames, targetPath, language = 'en' } = args;
-                try {
-                    const installedPaths = await agentManager.installMultipleAgents(agentNames, targetPath, language);
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: JSON.stringify({
-                                    success: true,
-                                    installedCount: installedPaths.length,
-                                    installedPaths,
-                                    message: `Successfully installed ${installedPaths.length} agents to ${targetPath}/claude/agents/`,
-                                }, null, 2),
-                            },
-                        ],
-                    };
+                            ],
+                        };
+                    }
+                    case 'list': {
+                        let agents = agentManager.getAllAgents(language);
+                        if (category) {
+                            agents = agents.filter(agent => {
+                                const categoryKeywords = {
+                                    development: ['developer', 'engineer', 'architect'],
+                                    data: ['data', 'analyst', 'scientist'],
+                                    design: ['designer', 'ux', 'ui'],
+                                    management: ['manager', 'owner', 'master'],
+                                };
+                                const keywords = categoryKeywords[category] || [];
+                                return keywords.some(keyword => agent.name.includes(keyword) ||
+                                    agent.description.toLowerCase().includes(keyword));
+                            });
+                        }
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: true,
+                                        count: agents.length,
+                                        agents: agents.map(agent => ({
+                                            name: agent.name,
+                                            description: agent.description,
+                                            tools: agent.tools,
+                                            language: agent.language,
+                                        })),
+                                    }, null, 2),
+                                },
+                            ],
+                        };
+                    }
+                    case 'details': {
+                        if (!query) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: 'Agent name is required for details action',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        const agent = agentManager.getAgent(query, language);
+                        if (!agent) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: `Agent '${query}' not found in language '${language}'`,
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: true,
+                                        agent: {
+                                            name: agent.name,
+                                            description: agent.description,
+                                            tools: agent.tools,
+                                            language: agent.language,
+                                            content: agent.content,
+                                        },
+                                    }, null, 2),
+                                },
+                            ],
+                        };
+                    }
+                    case 'recommend': {
+                        if (!keywords || keywords.length === 0) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: 'Keywords are required for recommend action',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        const recommendedAgents = await projectAnalyzer.getAgentsByKeywords(keywords);
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: true,
+                                        keywords,
+                                        recommendedAgents,
+                                        count: recommendedAgents.length,
+                                    }, null, 2),
+                                },
+                            ],
+                        };
+                    }
+                    case 'request': {
+                        if (!query) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: 'Agent name is required for request action',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        const githubToken = process.env.GITHUB_TOKEN;
+                        if (!githubToken) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: 'GitHub token not configured. Set GITHUB_TOKEN environment variable.',
+                                            suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        try {
+                            const issueTitle = `[Agent Request] ${query} - New agent needed`;
+                            const issueBodyContent = `## Agent Request
+
+**Role Name**: ${query}
+**Language**: ${language}
+
+## Description
+${issueBody || 'A new agent is needed for this role.'}
+
+## Use Cases
+- [Please describe specific use cases]
+
+## Required Tools
+- [List required tools like Read, Write, Edit, etc.]
+
+## Additional Details
+- Requested via MCP server manual request
+- Agent name: "${query}"
+
+---
+*This issue was created by claude-agents-power MCP server*`;
+                            const response = await fetch('https://api.github.com/repos/hongsw/claude-agents-power-mcp-server/issues', {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `token ${githubToken}`,
+                                    'Accept': 'application/vnd.github+json',
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    title: issueTitle,
+                                    body: issueBodyContent,
+                                    labels: ['agent-request'],
+                                }),
+                            });
+                            if (!response.ok) {
+                                throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+                            }
+                            const issue = await response.json();
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: true,
+                                            message: `Created GitHub issue #${issue.number} for agent "${query}"`,
+                                            issueUrl: issue.html_url,
+                                            issueNumber: issue.number,
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        catch (error) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: `Failed to create issue: ${error}`,
+                                            suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                    }
+                    default:
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: false,
+                                        error: `Unknown action: ${action}`,
+                                    }, null, 2),
+                                },
+                            ],
+                        };
                 }
-                catch (error) {
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: JSON.stringify({
-                                    success: false,
-                                    error: `Failed to install agents: ${error}`,
-                                }, null, 2),
-                            },
-                        ],
-                    };
-                }
             }
-            case 'recommend-by-keywords': {
-                const { keywords } = args;
-                const recommendedAgents = await projectAnalyzer.getAgentsByKeywords(keywords);
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: JSON.stringify({
-                                success: true,
-                                keywords,
-                                recommendedAgents,
-                                count: recommendedAgents.length,
-                            }, null, 2),
-                        },
-                    ],
-                };
-            }
-            case 'get-download-stats': {
-                const { limit = 10 } = args;
-                const stats = agentManager.getMostDownloadedAgents(limit);
-                return {
-                    content: [
-                        {
-                            type: 'text',
-                            text: JSON.stringify({
-                                success: true,
-                                stats,
-                                message: `Top ${limit} most downloaded agents`,
-                            }, null, 2),
-                        },
-                    ],
-                };
-            }
-            case 'refresh-agents': {
-                try {
-                    await agentManager.refreshAgentsFromGitHub();
-                    const agents = agentManager.getAllAgents();
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: JSON.stringify({
-                                    success: true,
-                                    count: agents.length,
-                                    message: `Successfully refreshed agents from GitHub. Total agents: ${agents.length}`,
-                                }, null, 2),
-                            },
-                        ],
-                    };
-                }
-                catch (error) {
-                    return {
-                        content: [
-                            {
-                                type: 'text',
-                                text: JSON.stringify({
-                                    success: false,
-                                    error: `Failed to refresh agents: ${error}`,
-                                }, null, 2),
-                            },
-                        ],
-                    };
+            case 'manage-agents': {
+                const { action, agentNames, targetPath, language = 'en', limit = 10 } = args;
+                switch (action) {
+                    case 'install': {
+                        if (!agentNames || !targetPath) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: 'Agent names and target path are required for install action',
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        try {
+                            const installedPaths = await agentManager.installMultipleAgents(agentNames, targetPath, language);
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: true,
+                                            installedCount: installedPaths.length,
+                                            installedPaths,
+                                            message: `Successfully installed ${installedPaths.length} agents to ${targetPath}/claude/agents/`,
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        catch (error) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: `Failed to install agents: ${error}`,
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                    }
+                    case 'stats': {
+                        const stats = agentManager.getMostDownloadedAgents(limit);
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: true,
+                                        stats,
+                                        message: `Top ${limit} most downloaded agents`,
+                                    }, null, 2),
+                                },
+                            ],
+                        };
+                    }
+                    case 'refresh': {
+                        try {
+                            await agentManager.refreshAgentsFromGitHub();
+                            const agents = agentManager.getAllAgents();
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: true,
+                                            count: agents.length,
+                                            message: `Successfully refreshed agents from GitHub. Total agents: ${agents.length}`,
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                        catch (error) {
+                            return {
+                                content: [
+                                    {
+                                        type: 'text',
+                                        text: JSON.stringify({
+                                            success: false,
+                                            error: `Failed to refresh agents: ${error}`,
+                                        }, null, 2),
+                                    },
+                                ],
+                            };
+                        }
+                    }
+                    default:
+                        return {
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: JSON.stringify({
+                                        success: false,
+                                        error: `Unknown action: ${action}`,
+                                    }, null, 2),
+                                },
+                            ],
+                        };
                 }
             }
             default:

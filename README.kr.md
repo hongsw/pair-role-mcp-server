@@ -359,7 +359,20 @@ claude-agents-power/
    claude-agents-power agents --action search --query "역할명"
    ```
 
-2. **Issue 제출**
+2. **자동 Issue 생성 (NEW! 🎉)**
+   ```bash
+   # 검색 결과가 0개일 때 자동으로 GitHub Issue 생성
+   # GITHUB_TOKEN 환경 변수 필요
+   export GITHUB_TOKEN=your_github_token
+   
+   # 에이전트 검색 시 자동 이슈 생성 활성화
+   claude-agents-power agents --action search --query "blockchain-architect" --autoCreateIssue true
+   
+   # 또는 직접 Issue 생성
+   claude-agents-power agents --action request --name "blockchain-architect" --description "블록체인 시스템 설계 전문가"
+   ```
+
+3. **수동 Issue 제출**
    - [GitHub Issues](https://github.com/hongsw/claude-agents-power-mcp-server/issues)로 이동
    - "New Issue" 클릭
    - 제목 형식: `[Agent Request] 역할명 - 간단한 설명`

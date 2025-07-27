@@ -483,7 +483,20 @@ If you can't find a specific agent role you're looking for, here's how to reques
    claude-agents-power agents --action search --query "your-role"
    ```
 
-2. **Submit an Issue**
+2. **Automatic Issue Creation (NEW! 🎉)**
+   ```bash
+   # Automatically create GitHub Issue when search returns 0 results
+   # Requires GITHUB_TOKEN environment variable
+   export GITHUB_TOKEN=your_github_token
+   
+   # Enable auto issue creation when searching
+   claude-agents-power agents --action search --query "blockchain-architect" --autoCreateIssue true
+   
+   # Or directly create an issue
+   claude-agents-power agents --action request --name "blockchain-architect" --description "Blockchain system design expert"
+   ```
+
+3. **Manual Issue Submission**
    - Go to [GitHub Issues](https://github.com/hongsw/claude-agents-power-mcp-server/issues)
    - Click "New Issue"
    - Use title format: `[Agent Request] Role Name - Brief Description`

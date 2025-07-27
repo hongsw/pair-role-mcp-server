@@ -374,6 +374,33 @@ Claude Desktop → MCP Protocol → Agent Manager → Local Files
 }
 \`\`\`
 
+#### 2.5 검색 (자동 Issue 생성)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "search",
+    "query": "blockchain-architect",
+    "language": "en",
+    "autoCreateIssue": true,
+    "issueBody": "We need a blockchain architect for smart contract development"
+  }
+}
+\`\`\`
+
+#### 2.6 요청 (request)
+\`\`\`json
+{
+  "tool": "agents",
+  "arguments": {
+    "action": "request",
+    "query": "ai-ethics-officer",
+    "language": "en",
+    "issueBody": "Need an AI ethics specialist for responsible AI development"
+  }
+}
+\`\`\`
+
 ### 3. manage-agents
 에이전트 관리 작업을 처리합니다.
 
@@ -566,14 +593,14 @@ Key practices:
       },
       {
         name: 'agents',
-        description: 'Search, list, get details, or recommend agents',
+        description: 'Search, list, get details, recommend agents, or request new ones',
         inputSchema: {
           type: 'object',
           properties: {
             action: {
               type: 'string',
               description: 'Action to perform',
-              enum: ['search', 'list', 'details', 'recommend'],
+              enum: ['search', 'list', 'details', 'recommend', 'request'],
             },
             query: {
               type: 'string',
@@ -594,6 +621,15 @@ Key practices:
               type: 'string',
               description: 'Filter by category (for list action)',
               enum: ['development', 'data', 'design', 'management', 'marketing', 'operations', 'hr', 'finance', 'legal', 'research', 'healthcare', 'education', 'media', 'manufacturing', 'other'],
+            },
+            autoCreateIssue: {
+              type: 'boolean',
+              description: 'Auto-create GitHub issue if no agents found (for search action)',
+              default: false,
+            },
+            issueBody: {
+              type: 'string',
+              description: 'Additional details for the issue (when autoCreateIssue is true)',
             },
           },
           required: ['action'],
@@ -662,12 +698,14 @@ Key practices:
     }
 
     case 'agents': {
-      const { action, query, keywords, language = 'en', category } = args as {
-        action: 'search' | 'list' | 'details' | 'recommend';
+      const { action, query, keywords, language = 'en', category, autoCreateIssue = false, issueBody } = args as {
+        action: 'search' | 'list' | 'details' | 'recommend' | 'request';
         query?: string;
         keywords?: string[];
         language?: string;
         category?: string;
+        autoCreateIssue?: boolean;
+        issueBody?: string;
       };
 
       switch (action) {
@@ -690,6 +728,98 @@ Key practices:
           const filteredAgents = agents.filter(
             agent => !language || agent.language === language
           );
+          
+          // Auto-create issue if no agents found and autoCreateIssue is true
+          if (filteredAgents.length === 0 && autoCreateIssue) {
+            const githubToken = process.env.GITHUB_TOKEN;
+            if (!githubToken) {
+              return {
+                content: [
+                  {
+                    type: 'text',
+                    text: JSON.stringify({
+                      success: false,
+                      error: 'No agents found. GitHub token not configured for auto-issue creation. Set GITHUB_TOKEN environment variable.',
+                      suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                    }, null, 2),
+                  },
+                ],
+              };
+            }
+
+            try {
+              const issueTitle = `[Agent Request] ${query} - New agent needed`;
+              const issueBodyContent = `## Agent Request
+
+**Role Name**: ${query}
+**Language**: ${language}
+
+## Description
+${issueBody || 'A new agent is needed for this role.'}
+
+## Use Cases
+- [Please describe specific use cases]
+
+## Required Tools
+- [List required tools like Read, Write, Edit, etc.]
+
+## Additional Details
+- Requested via MCP server auto-issue creation
+- No existing agents found matching: "${query}"
+
+---
+*This issue was automatically created by claude-agents-power MCP server*`;
+
+              const response = await fetch('https://api.github.com/repos/hongsw/claude-agents-power-mcp-server/issues', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `token ${githubToken}`,
+                  'Accept': 'application/vnd.github+json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  title: issueTitle,
+                  body: issueBodyContent,
+                  labels: ['agent-request', 'auto-created'],
+                }),
+              });
+
+              if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+              }
+
+              const issue = await response.json();
+              
+              return {
+                content: [
+                  {
+                    type: 'text',
+                    text: JSON.stringify({
+                      success: true,
+                      count: 0,
+                      message: `No agents found for "${query}". Created GitHub issue #${issue.number}`,
+                      issueUrl: issue.html_url,
+                      issueNumber: issue.number,
+                    }, null, 2),
+                  },
+                ],
+              };
+            } catch (error) {
+              return {
+                content: [
+                  {
+                    type: 'text',
+                    text: JSON.stringify({
+                      success: false,
+                      count: 0,
+                      error: `Failed to create issue: ${error}`,
+                      suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                    }, null, 2),
+                  },
+                ],
+              };
+            }
+          }
           
           return {
             content: [
@@ -829,6 +959,109 @@ Key practices:
               },
             ],
           };
+        }
+
+        case 'request': {
+          if (!query) {
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({
+                    success: false,
+                    error: 'Agent name is required for request action',
+                  }, null, 2),
+                },
+              ],
+            };
+          }
+
+          const githubToken = process.env.GITHUB_TOKEN;
+          if (!githubToken) {
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({
+                    success: false,
+                    error: 'GitHub token not configured. Set GITHUB_TOKEN environment variable.',
+                    suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                  }, null, 2),
+                },
+              ],
+            };
+          }
+
+          try {
+            const issueTitle = `[Agent Request] ${query} - New agent needed`;
+            const issueBodyContent = `## Agent Request
+
+**Role Name**: ${query}
+**Language**: ${language}
+
+## Description
+${issueBody || 'A new agent is needed for this role.'}
+
+## Use Cases
+- [Please describe specific use cases]
+
+## Required Tools
+- [List required tools like Read, Write, Edit, etc.]
+
+## Additional Details
+- Requested via MCP server manual request
+- Agent name: "${query}"
+
+---
+*This issue was created by claude-agents-power MCP server*`;
+
+            const response = await fetch('https://api.github.com/repos/hongsw/claude-agents-power-mcp-server/issues', {
+              method: 'POST',
+              headers: {
+                'Authorization': `token ${githubToken}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                title: issueTitle,
+                body: issueBodyContent,
+                labels: ['agent-request'],
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+            }
+
+            const issue = await response.json();
+            
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({
+                    success: true,
+                    message: `Created GitHub issue #${issue.number} for agent "${query}"`,
+                    issueUrl: issue.html_url,
+                    issueNumber: issue.number,
+                  }, null, 2),
+                },
+              ],
+            };
+          } catch (error) {
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({
+                    success: false,
+                    error: `Failed to create issue: ${error}`,
+                    suggestion: 'Visit https://github.com/hongsw/claude-agents-power-mcp-server/issues to manually create an issue',
+                  }, null, 2),
+                },
+              ],
+            };
+          }
         }
 
         default:

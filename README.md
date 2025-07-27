@@ -140,11 +140,30 @@ Add to your `~/.config/claude/mcp_servers.json`:
       "command": "node",
       "args": ["/path/to/claude-agents-power/dist/index.js"],
       "cwd": "/path/to/your/project",
-      "env": {}
+      "env": {
+        "GITHUB_TOKEN": "your_github_token_here",
+        "POSTHOG_API_KEY": "your_posthog_api_key_here"
+      }
     }
   }
 }
 ```
+
+### Environment Variables
+
+Configure these optional environment variables for enhanced functionality:
+
+- **`GITHUB_TOKEN`**: GitHub personal access token for automatic issue creation when agents are not found
+  - Create at: https://github.com/settings/tokens
+  - Required permissions: `public_repo` or `repo` (for private repos)
+  
+- **`POSTHOG_API_KEY`**: PostHog API key for anonymous usage analytics
+  - Helps improve the tool by understanding usage patterns
+  - No personal data is collected, only tool usage metrics
+  - Get your key at: https://app.posthog.com/project/settings
+  
+- **`POSTHOG_HOST`**: PostHog instance URL (defaults to https://app.posthog.com)
+  - Only needed if using a self-hosted PostHog instance
 
 ### MCP Tools Reference
 

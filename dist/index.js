@@ -5,6 +5,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema, ListResourcesRequestSche
 import { Command } from 'commander';
 import { ProjectAnalyzer } from './projectAnalyzer.js';
 import { AgentManager } from './agentManager.js';
+import { initializeAnalytics, trackEvent, AnalyticsEvents, shutdown as shutdownAnalytics } from './analytics.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -139,6 +140,12 @@ function createServerInstance() {
     });
     return server;
 }
+// Initialize analytics
+initializeAnalytics();
+trackEvent(AnalyticsEvents.SERVER_STARTED, {
+    debug_mode: cliOptions.debug,
+    transport: cliOptions.transport,
+});
 // Initialize managers
 // Support both development and production paths
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -629,10 +636,22 @@ Key practices:
     // Handle tool calls
     server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { name, arguments: args } = request.params;
+        // Track tool usage
+        trackEvent(AnalyticsEvents.TOOL_CALLED, {
+            tool_name: name,
+            args_provided: Object.keys(args || {}),
+        });
         switch (name) {
             case 'analyze-project': {
                 const { projectPath } = args;
                 const analysis = await projectAnalyzer.analyzeProject(projectPath);
+                // Track project analysis
+                trackEvent(AnalyticsEvents.PROJECT_ANALYZED, {
+                    project_types: analysis.projectType,
+                    technologies: analysis.technologies,
+                    recommended_count: analysis.recommendedAgents.length,
+                    confidence: analysis.confidence,
+                });
                 return {
                     content: [
                         {
@@ -665,6 +684,13 @@ Key practices:
                         }
                         const agents = agentManager.searchAgents(query);
                         const filteredAgents = agents.filter(agent => !language || agent.language === language);
+                        // Track search event
+                        trackEvent(AnalyticsEvents.AGENT_SEARCHED, {
+                            query,
+                            language,
+                            found_count: filteredAgents.length,
+                            auto_create_issue: autoCreateIssue,
+                        });
                         // Auto-create issue if no agents found and autoCreateIssue is true
                         if (filteredAgents.length === 0 && autoCreateIssue) {
                             const githubToken = process.env.GITHUB_TOKEN;
@@ -721,6 +747,16 @@ ${issueBody || 'A new agent is needed for this role.'}
                                     throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
                                 }
                                 const issue = await response.json();
+                                // Log to stderr for visibility
+                                console.error(`[MCP Sub-Agents] ✅ GitHub issue created successfully!`);
+                                console.error(`[MCP Sub-Agents] Issue #${issue.number}: ${issue.html_url}`);
+                                // Track issue creation
+                                trackEvent(AnalyticsEvents.AGENT_ISSUE_CREATED, {
+                                    query,
+                                    language,
+                                    issue_number: issue.number,
+                                    issue_url: issue.html_url,
+                                });
                                 return {
                                     content: [
                                         {
@@ -728,9 +764,14 @@ ${issueBody || 'A new agent is needed for this role.'}
                                             text: JSON.stringify({
                                                 success: true,
                                                 count: 0,
-                                                message: `No agents found for "${query}". Created GitHub issue #${issue.number}`,
+                                                message: `🔍 No agents found for "${query}"\n\n📝 GitHub issue automatically created!\n\n🔗 Issue #${issue.number}: ${issue.title}\n📎 ${issue.html_url}\n\n💡 The maintainers will review and potentially add this agent.\n📚 Meanwhile, you can create your own agent following the guide.`,
                                                 issueUrl: issue.html_url,
                                                 issueNumber: issue.number,
+                                                nextSteps: [
+                                                    'Wait for maintainers to review the issue',
+                                                    'Create your own agent following the documentation',
+                                                    'Check back later for the new agent'
+                                                ]
                                             }, null, 2),
                                         },
                                     ],
@@ -1131,8 +1172,24 @@ async function main() {
         console.error('[MCP Sub-Agents] Server running on stdio');
     }
 }
+// Handle graceful shutdown
+process.on('SIGINT', () => {
+    console.error('[MCP Sub-Agents] Shutting down...');
+    shutdownAnalytics();
+    process.exit(0);
+});
+process.on('SIGTERM', () => {
+    console.error('[MCP Sub-Agents] Shutting down...');
+    shutdownAnalytics();
+    process.exit(0);
+});
 main().catch((error) => {
     console.error('Fatal error in main():', error);
+    trackEvent(AnalyticsEvents.SERVER_ERROR, {
+        error: error.message,
+        stack: error.stack,
+    });
+    shutdownAnalytics();
     process.exit(1);
 });
 //# sourceMappingURL=index.js.map

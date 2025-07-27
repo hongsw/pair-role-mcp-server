@@ -140,11 +140,30 @@ npm run build
       "command": "node",
       "args": ["/path/to/claude-agents-power/dist/index.js"],
       "cwd": "/path/to/your/project",
-      "env": {}
+      "env": {
+        "GITHUB_TOKEN": "your_github_token_here",
+        "POSTHOG_API_KEY": "your_posthog_api_key_here"
+      }
     }
   }
 }
 ```
+
+### 환경 변수
+
+향상된 기능을 위한 선택적 환경 변수 설정:
+
+- **`GITHUB_TOKEN`**: 에이전트를 찾을 수 없을 때 자동 이슈 생성을 위한 GitHub 개인 액세스 토큰
+  - 생성 위치: https://github.com/settings/tokens
+  - 필요한 권한: `public_repo` 또는 `repo` (비공개 저장소의 경우)
+  
+- **`POSTHOG_API_KEY`**: 익명 사용량 분석을 위한 PostHog API 키
+  - 사용 패턴을 이해하여 도구를 개선하는 데 도움
+  - 개인 데이터는 수집하지 않으며, 도구 사용 메트릭만 수집
+  - 키 받기: https://app.posthog.com/project/settings
+  
+- **`POSTHOG_HOST`**: PostHog 인스턴스 URL (기본값: https://app.posthog.com)
+  - 자체 호스팅 PostHog 인스턴스를 사용하는 경우에만 필요
 
 ### MCP 도구 참조
 

@@ -160,7 +160,7 @@ const TRANSPORT_TYPE = 'stdio';
 function createServerInstance() {
   const server = new Server(
     {
-      name: 'pair-role-mcp-server',
+      name: 'claude-agents-power-mcp-server',
       version: '1.0.0',
     },
     {

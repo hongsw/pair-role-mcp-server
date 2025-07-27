@@ -17,7 +17,7 @@ cat ~/.config/claude/mcp_servers.json
   "mcpServers": {
     "pair-role": {
       "command": "/Users/hongmartin/.asdf/installs/nodejs/24.4.0/bin/node",
-      "args": ["/Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/dist/index.js"],
+      "args": ["/Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server/dist/index.js"],
       "cwd": "/Users/hongmartin/Claude/claude-agents-power",
       "env": {}
     }
@@ -31,11 +31,11 @@ which node
 # 결과를 mcp_servers.json의 command 필드에 정확히 입력했는지 확인
 
 # 3. 빌드 파일 존재 및 권한 확인
-ls -la /Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/dist/index.js
+ls -la /Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server/dist/index.js
 # 파일이 존재하고 실행 권한(x)이 있는지 확인
 
 # 4. 수동 실행 테스트
-cd /Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server
+cd /Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server
 node dist/index.js --help
 ```
 
@@ -134,7 +134,7 @@ find sub-agents/ -name "*.md" | head -5
 
 ```bash
 # 1. 직접 실행해서 오류 메시지 확인
-cd /Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server
+cd /Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server
 node dist/index.js
 
 # 2. JSON-RPC 메시지 직접 전송 (고급)
@@ -224,7 +224,7 @@ which node
 cp ~/.config/claude/mcp_servers.json ~/.config/claude/mcp_servers.json.backup
 
 # 2. 프로젝트 완전 재빌드
-cd /Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server
+cd /Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server
 rm -rf dist/
 rm -rf node_modules/
 npm install
@@ -253,7 +253,7 @@ EOF
   "mcpServers": {
     "pair-role": {
       "command": "node",
-      "args": ["/Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/dist/index.js"]
+      "args": ["/Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server/dist/index.js"]
     }
   }
 }

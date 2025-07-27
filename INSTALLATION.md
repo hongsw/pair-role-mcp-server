@@ -9,7 +9,7 @@
 cd /Users/hongmartin/Claude/claude-agents-power
 
 # 2. MCP 서버 디렉토리로 이동
-cd pair-role-mcp-server
+cd claude-agents-power-mcp-server
 
 # 3. 의존성 설치 (이미 완료됨)
 npm install
@@ -86,5 +86,5 @@ mcp: install-agents {
 
 start.sh 파일에 실행 권한이 있는지 확인:
 ```bash
-chmod +x /Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/start.sh
+chmod +x /Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server/start.sh
 ```

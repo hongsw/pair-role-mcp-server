@@ -15,7 +15,7 @@
   "mcpServers": {
     "pair-role": {
       "command": "/Users/hongmartin/.asdf/installs/nodejs/24.4.0/bin/node",
-      "args": ["/Users/hongmartin/Claude/claude-agents-power/pair-role-mcp-server/dist/index.js"],
+      "args": ["/Users/hongmartin/Claude/claude-agents-power/claude-agents-power-mcp-server/dist/index.js"],
       "cwd": "/Users/hongmartin/Claude/claude-agents-power",
       "env": {}
     }

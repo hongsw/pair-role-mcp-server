@@ -222,7 +222,7 @@ development 카테고리의 에이전트들을 mcp__claude-agents-power__list-ag
 cat ~/.config/claude/mcp_servers.json
 
 # 2. 빌드 상태 확인
-ls -la /path/to/pair-role-mcp-server/dist/index.js
+ls -la /path/to/claude-agents-power-mcp-server/dist/index.js
 
 # 3. Claude Code 재시작
 ```

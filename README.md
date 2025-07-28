@@ -74,6 +74,7 @@ Now you can use specialized roles in Claude:
 - [🌟 Features](#-features)
 - [🚀 Quick Start](#-quick-start)
 - [📋 Available Roles](#-available-roles)
+- [⚡ Slash Commands (NEW!)](#-slash-commands-new)
 - [🎯 Usage Examples](#-usage-examples)
 - [📚 Documentation](#-documentation)
 - [🛠️ Development](#-development)
@@ -441,6 +442,70 @@ mcp__claude-agents-power__install-agents ["frontend-developer", "backend-develop
 | [**Chief Strategy Officer**](sub-agents/en/chief-strategy-officer.md) | [EN](sub-agents/en/chief-strategy-officer.md) | [KO](sub-agents/ko/chief-strategy-officer.md) | `Read, Write` | Corporate strategy, planning |
 
 </details>
+
+## ⚡ Slash Commands (NEW!)
+
+Claude Agents Power now supports convenient slash commands in Claude Code, similar to SuperClaude Framework!
+
+### 🚀 Installation
+
+Install slash commands to Claude Code:
+```bash
+npx claude-agents-power --install-slash-commands
+```
+
+### 📋 Available Commands
+
+Once installed, you can use these commands directly in Claude Code:
+
+#### `/agents:load [language] [role] [--flags]`
+Load and display available agents
+```
+/agents:load                    # Show all agents
+/agents:load ko                 # Show Korean agents
+/agents:load backend-engineer   # Show specific role
+/agents:load --all --detailed   # Show all with descriptions
+```
+
+#### `/agents:search <query> [--flags]`
+Search for agents by skills or keywords
+```
+/agents:search "machine learning"
+/agents:search "frontend react" --language en
+/agents:search "데이터 분석" --language ko --fuzzy
+```
+
+#### `/agents:suggest [context] [--flags]`
+Get intelligent agent recommendations
+```
+/agents:suggest                                    # Auto-detect from project
+/agents:suggest "building React e-commerce"
+/agents:suggest --project-type web --phase development
+```
+
+#### `/agents:version [--flags]`
+Check system version and status
+```
+/agents:version                    # Basic version info
+/agents:version --detailed         # System details
+/agents:version --check-updates    # Check for updates
+```
+
+### 🗑️ Uninstallation
+
+Remove slash commands:
+```bash
+npx claude-agents-power --uninstall-slash-commands
+```
+
+### 💡 Pro Tips
+
+- Start with `/agents:load` to see all available agents
+- Use `/agents:suggest` for context-aware recommendations
+- Try `/agents:search` when you know what skills you need
+- Check `/agents:version` if agents aren't loading properly
+
+---
 
 ## 🎯 Usage Examples
 

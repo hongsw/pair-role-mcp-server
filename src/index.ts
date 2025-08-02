@@ -19,6 +19,7 @@ import fs from 'fs';
 import os from 'os';
 import dotenv from 'dotenv';
 import { AgentDownloader, DownloadOptions } from './agentDownloader.js';
+import { AIAnalysisService, AIAgentRecommendation } from './aiAnalysisService.js';
 
 // ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
@@ -44,12 +45,20 @@ const hasAgentDownload = process.argv.includes('--agent-download');
 
 // Parse CLI arguments using commander
 const program = new Command()
+  .name('claude-agents-power')
   .option('--transport <stdio>', 'transport type', 'stdio')
   .option('--debug', 'enable debug logging')
   .option('--install', 'install MCP configuration to Claude Desktop')
   .option('--install-slash-commands', 'install slash commands to Claude Code')
   .option('--uninstall-slash-commands', 'uninstall slash commands from Claude Code')
   .option('--agent-download', 'download recommended agents for current project')
+  .option('--target-dir <dir>', 'target directory for agent files (default: "./agents")')
+  .option('--claude-md <path>', 'path to CLAUDE.md file (default: "./CLAUDE.md")')
+  .option('--format <format>', 'agent file format: md, yaml, json (default: "md")')
+  .option('--language <lang>', 'preferred language: en, ko, ja, zh (default: "en")')
+  .option('--limit <n>', 'maximum number of agents to download (default: 10)')
+  .option('--dry-run', 'preview recommendations without downloading')
+  .option('--overwrite', 'overwrite existing agent files')
   .allowUnknownOption() // let MCP Inspector / other wrappers pass through extra flags
   .parse(process.argv);
 
@@ -60,6 +69,13 @@ const cliOptions = program.opts<{
   installSlashCommands?: boolean;
   uninstallSlashCommands?: boolean;
   agentDownload?: boolean;
+  targetDir?: string;
+  claudeMd?: string;
+  format?: string;
+  language?: string;
+  limit?: string;
+  dryRun?: boolean;
+  overwrite?: boolean;
 }>();
 
 // Override with manual parsing results
@@ -285,77 +301,84 @@ if (cliOptions.agentDownload) {
   try {
     const downloader = new AgentDownloader();
     
-    // Parse additional command line arguments for agent download
-    const args = process.argv.slice(2);
-    
     const options: DownloadOptions = {
-      targetDir: './agents',
-      claudeMdPath: './CLAUDE.md',
-      format: 'md',
-      language: 'en',
-      limit: 10,
-      dryRun: false,
-      overwrite: false
+      targetDir: cliOptions.targetDir || './agents',
+      claudeMdPath: cliOptions.claudeMd || './CLAUDE.md',
+      format: (cliOptions.format as 'md' | 'yaml' | 'json') || 'md',
+      language: (cliOptions.language as 'en' | 'ko' | 'ja' | 'zh') || 'en',
+      limit: cliOptions.limit ? parseInt(cliOptions.limit) : 10,
+      dryRun: cliOptions.dryRun || false,
+      overwrite: cliOptions.overwrite || false
     };
-
-    // Parse agent download specific flags
-    for (let i = 0; i < args.length; i++) {
-      const arg = args[i];
-      const nextArg = args[i + 1];
-      
-      if (arg === '--target-dir' && nextArg) {
-        options.targetDir = nextArg;
-        i++;
-      } else if (arg === '--claude-md' && nextArg) {
-        options.claudeMdPath = nextArg;
-        i++;
-      } else if (arg === '--format' && nextArg) {
-        options.format = nextArg as 'md' | 'yaml' | 'json';
-        i++;
-      } else if (arg === '--language' && nextArg) {
-        options.language = nextArg as 'en' | 'ko' | 'ja' | 'zh';
-        i++;
-      } else if (arg === '--limit' && nextArg) {
-        options.limit = parseInt(nextArg);
-        i++;
-      } else if (arg === '--dry-run') {
-        options.dryRun = true;
-      } else if (arg === '--overwrite') {
-        options.overwrite = true;
-      }
-    }
 
     console.log('🔍 Analyzing project...');
     const result = await downloader.downloadAgents(options);
     
-    // Display analysis results
-    console.log('\n🎯 Project Analysis Results:');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    // Display enhanced AI analysis results
+    console.log('\n🧠 AI-Powered Project Analysis Results:');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`📊 Project Type: ${result.analysis.projectType}`);
     console.log(`🛠️ Technologies: ${result.analysis.technologies.join(', ') || 'None detected'}`);
     console.log(`📚 Frameworks: ${result.analysis.frameworks.join(', ') || 'None detected'}`);
     console.log(`📈 Complexity: ${result.analysis.complexity}/10`);
+    console.log(`🚀 Development Phase: ${result.analysis.phase}`);
     console.log(`👥 Recommended Team Size: ${result.analysis.teamSize} agents`);
     
     if (result.analysis.description) {
       console.log(`📝 Description: ${result.analysis.description}`);
     }
 
-    console.log('\n🏆 Top Recommendations:');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    // Display quality indicators
+    if (result.analysis.qualityIndicators) {
+      console.log('\n📋 Quality Assessment:');
+      const qi = result.analysis.qualityIndicators;
+      console.log(`   ${qi.hasTests ? '✅' : '❌'} Automated Testing`);
+      console.log(`   ${qi.hasDocumentation ? '✅' : '❌'} Documentation`);
+      console.log(`   ${qi.hasCI ? '✅' : '✅'} CI/CD Pipeline`);
+      console.log(`   ${qi.hasLinting ? '✅' : '❌'} Code Quality Tools`);
+      console.log(`   📊 Code Complexity: ${qi.codeComplexity}`);
+    }
+
+    // Display architectural patterns if available
+    if (result.analysis.architecturalPatterns && result.analysis.architecturalPatterns.length > 0) {
+      console.log(`\n🏗️ Architectural Patterns: ${result.analysis.architecturalPatterns.join(', ')}`);
+    }
+
+    // Display development practices if available
+    if (result.analysis.developmentPractices && result.analysis.developmentPractices.length > 0) {
+      console.log(`\n⚙️ Development Practices: ${result.analysis.developmentPractices.join(', ')}`);
+    }
+
+    console.log('\n🏆 AI-Generated Recommendations:');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     
     result.recommendations.forEach((rec, index) => {
       const icon = rec.priority === 'essential' ? '⭐' : 
                    rec.priority === 'recommended' ? '🔧' : '💡';
       console.log(`${index + 1}. ${icon} ${rec.name} (${rec.relevanceScore}% match)`);
       console.log(`   └─ ${rec.reasoning}`);
+      
+      // Display specific tasks if available
+      if (rec.specificTasks && rec.specificTasks.length > 0) {
+        console.log(`   🎯 Key Tasks: ${rec.specificTasks.slice(0, 2).join(', ')}${rec.specificTasks.length > 2 ? '...' : ''}`);
+      }
+      
+      // Display integration points if available
+      if (rec.integrationPoints && rec.integrationPoints.length > 0) {
+        console.log(`   🔗 Integrations: ${rec.integrationPoints.slice(0, 2).join(', ')}${rec.integrationPoints.length > 2 ? '...' : ''}`);
+      }
     });
 
     if (options.dryRun) {
-      console.log('\n💡 This was a dry run. Use without --dry-run to download agents.');
+      console.log('\n💡 This was an AI-powered dry run analysis. Use without --dry-run to download agents.');
+      console.log('\n🧠 AI Analysis Features Used:');
+      console.log('   • Intelligent project structure analysis');
+      console.log('   • Context-aware agent recommendations');  
+      console.log('   • Dynamic priority assignment');
+      console.log('   • Task-specific role matching');
     } else if (result.downloaded && result.downloaded.length > 0) {
-      console.log('\n📥 Downloaded Agents:');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('\n📥 Downloaded AI-Recommended Agents:');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       result.downloaded.forEach(filePath => {
         const fileName = path.basename(filePath);
         const fileSize = fs.statSync(filePath).size;
@@ -363,12 +386,13 @@ if (cliOptions.agentDownload) {
         console.log(`✅ ${fileName.padEnd(25)} (${fileSizeKB}KB)`);
       });
       
-      console.log('\n📊 Summary:');
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log(`✅ ${result.downloaded.length} agents downloaded successfully`);
+      console.log('\n📊 AI-Powered Summary:');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log(`✅ ${result.downloaded.length} agents intelligently selected and downloaded`);
       console.log(`📁 Files saved to: ${options.targetDir}`);
-      console.log(`📋 README.md created with usage guide`);
-      console.log(`💡 Next: Try using agents in your development workflow`);
+      console.log(`📋 Enhanced README.md created with AI analysis insights`);
+      console.log(`🧠 AI Features: Dynamic analysis, context-aware recommendations, smart prioritization`);
+      console.log(`💡 Next: Try using your AI-recommended agents in your development workflow`);
     }
     
   } catch (error) {
@@ -452,9 +476,10 @@ const agentManager = new AgentManager(agentsPath, {
   branch: 'main',
   path: 'claude/agents'
 }, cliOptions.debug || false);
+const aiAnalysisService = new AIAnalysisService();
 
 // Function to setup tools for a server instance
-function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManager: AgentManager) {
+function setupTools(server: Server, projectAnalyzer: ProjectAnalyzer, agentManager: AgentManager, aiAnalysisService: AIAnalysisService) {
 
   // Define resources
   server.setRequestHandler(ListResourcesRequestSchema, async () => {
@@ -839,6 +864,34 @@ Key practices:
         },
       },
       {
+        name: 'ai-analyze-project',
+        description: 'Perform AI-powered comprehensive project analysis and agent recommendations',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            claudeMdPath: {
+              type: 'string',
+              description: 'Path to CLAUDE.md file or project description',
+            },
+            projectPath: {
+              type: 'string',
+              description: 'Optional path to project root directory (defaults to CLAUDE.md directory)',
+            },
+            generateRecommendations: {
+              type: 'boolean',
+              description: 'Whether to generate agent recommendations',
+              default: true,
+            },
+            maxRecommendations: {
+              type: 'number',
+              description: 'Maximum number of agent recommendations to return',
+              default: 10,
+            },
+          },
+          required: ['claudeMdPath'],
+        },
+      },
+      {
         name: 'agents',
         description: 'Search, list, get details, recommend agents, or request new ones',
         inputSchema: {
@@ -956,6 +1009,91 @@ Key practices:
           },
         ],
       };
+    }
+
+    case 'ai-analyze-project': {
+      const { claudeMdPath, projectPath, generateRecommendations = true, maxRecommendations = 10 } = args as {
+        claudeMdPath: string;
+        projectPath?: string;
+        generateRecommendations?: boolean;
+        maxRecommendations?: number;
+      };
+
+      try {
+        // Perform AI-powered project analysis
+        const analysis = await aiAnalysisService.analyzeProject(claudeMdPath, projectPath);
+        
+        let recommendations: AIAgentRecommendation[] = [];
+        if (generateRecommendations) {
+          const allRecommendations = await aiAnalysisService.generateRecommendations(analysis);
+          recommendations = allRecommendations.slice(0, maxRecommendations);
+        }
+
+        // Track AI analysis event
+        trackEvent(AnalyticsEvents.PROJECT_ANALYZED, {
+          project_types: analysis.projectType,
+          technologies: analysis.technologies,
+          recommended_count: recommendations.length,
+          confidence: analysis.complexity / 10, // Normalize complexity as confidence
+          ai_powered: true,
+        });
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                success: true,
+                analysis: {
+                  projectType: analysis.projectType,
+                  technologies: analysis.technologies,
+                  frameworks: analysis.frameworks,
+                  complexity: analysis.complexity,
+                  phase: analysis.phase,
+                  teamSize: analysis.teamSize,
+                  description: analysis.description,
+                  goals: analysis.goals,
+                  requirements: analysis.requirements,
+                  architecturalPatterns: analysis.architecturalPatterns,
+                  developmentPractices: analysis.developmentPractices,
+                  qualityIndicators: analysis.qualityIndicators,
+                },
+                recommendations: recommendations.map(rec => ({
+                  name: rec.name,
+                  description: rec.description,
+                  relevanceScore: rec.relevanceScore,
+                  reasoning: rec.reasoning,
+                  category: rec.category,
+                  priority: rec.priority,
+                  tools: rec.tools,
+                  specificTasks: rec.specificTasks,
+                  integrationPoints: rec.integrationPoints,
+                })),
+                message: `AI analysis completed for ${path.basename(claudeMdPath)}. Project type: ${analysis.projectType}, Complexity: ${analysis.complexity}/10, Recommended ${recommendations.length} agents.`,
+                aiFeatures: {
+                  intelligentAnalysis: 'Comprehensive project understanding using AI reasoning',
+                  contextAwareRecommendations: 'Agent suggestions based on project context and requirements',
+                  dynamicPrioritization: 'Smart priority assignment based on project needs',
+                  taskSpecificMatching: 'Agents matched to specific tasks and integration points'
+                }
+              }, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                success: false,
+                error: `AI analysis failed: ${error instanceof Error ? error.message : String(error)}`,
+                suggestion: 'Please check the CLAUDE.md file path and project structure',
+              }, null, 2),
+            },
+          ],
+        };
+      }
     }
 
     case 'agents': {
@@ -1611,7 +1749,7 @@ async function main() {
 
   // Stdio transport - this is already stateless by nature
   const server = createServerInstance();
-  setupTools(server, projectAnalyzer, agentManager);
+  setupTools(server, projectAnalyzer, agentManager, aiAnalysisService);
   const transport = new StdioServerTransport();
   await server.connect(transport);
   if (cliOptions.debug) {

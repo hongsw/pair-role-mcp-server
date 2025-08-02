@@ -2,31 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { AIAnalysisService, AIProjectAnalysis, AIAgentRecommendation } from './aiAnalysisService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export interface ProjectAnalysis {
-  projectType: string;
-  technologies: string[];
-  frameworks: string[];
-  complexity: number;
-  phase: string;
-  teamSize: number;
-  description?: string;
-  goals?: string[];
-  requirements?: string[];
-}
-
-export interface AgentRecommendation {
-  name: string;
-  description: string;
-  relevanceScore: number;
-  reasoning: string;
-  tools: string[];
-  category: string;
-  priority: 'essential' | 'recommended' | 'optional';
-}
+// Using AIProjectAnalysis and AIAgentRecommendation from aiAnalysisService
+export type ProjectAnalysis = AIProjectAnalysis;
+export type AgentRecommendation = AIAgentRecommendation;
 
 export interface DownloadOptions {
   targetDir: string;
@@ -43,29 +26,29 @@ export interface DownloadOptions {
  */
 export class AgentDownloader {
   private agentsSourceDir: string;
+  private aiAnalysisService: AIAnalysisService;
 
   constructor() {
     this.agentsSourceDir = path.join(__dirname, '../claude/agents');
+    this.aiAnalysisService = new AIAnalysisService();
   }
 
   /**
-   * Main entry point - analyze project and download agents
+   * Main entry point - analyze project and download agents using AI
    */
   async downloadAgents(options: DownloadOptions): Promise<{ 
     analysis: ProjectAnalysis; 
     recommendations: AgentRecommendation[];
     downloaded?: string[];
   }> {
-    // 1. Analyze project
-    const analysis = await this.analyzeProject(options.claudeMdPath);
+    // 1. Perform AI-powered project analysis
+    const analysis = await this.aiAnalysisService.analyzeProject(options.claudeMdPath);
     
-    // 2. Generate recommendations
-    const recommendations = await this.generateRecommendations(analysis);
+    // 2. Generate AI-powered recommendations
+    const recommendations = await this.aiAnalysisService.generateRecommendations(analysis);
     
-    // 3. Sort and limit recommendations
-    const sortedRecommendations = recommendations
-      .sort((a, b) => b.relevanceScore - a.relevanceScore)
-      .slice(0, options.limit);
+    // 3. Sort and limit recommendations (they're already sorted by AI)
+    const sortedRecommendations = recommendations.slice(0, options.limit);
 
     if (options.dryRun) {
       return { analysis, recommendations: sortedRecommendations };
@@ -81,332 +64,37 @@ export class AgentDownloader {
   }
 
   /**
-   * Analyze project context from CLAUDE.md and project structure
+   * Legacy wrapper - now uses AI analysis service
+   * @deprecated Use aiAnalysisService.analyzeProject directly
    */
   private async analyzeProject(claudeMdPath: string): Promise<ProjectAnalysis> {
-    let analysis: ProjectAnalysis = {
-      projectType: 'unknown',
-      technologies: [],
-      frameworks: [],
-      complexity: 5,
-      phase: 'development',
-      teamSize: 5
-    };
-
-    // Try to read CLAUDE.md
-    try {
-      if (fs.existsSync(claudeMdPath)) {
-        const claudeMdContent = fs.readFileSync(claudeMdPath, 'utf8');
-        analysis = this.parseClaudeMd(claudeMdContent);
-      }
-    } catch (error) {
-      console.warn(`Could not read CLAUDE.md: ${error}`);
-    }
-
-    // Analyze project structure
-    const structureAnalysis = await this.analyzeProjectStructure();
-    
-    // Merge analyses
-    return {
-      ...analysis,
-      technologies: [...new Set([...analysis.technologies, ...structureAnalysis.technologies])],
-      frameworks: [...new Set([...analysis.frameworks, ...structureAnalysis.frameworks])],
-      projectType: analysis.projectType !== 'unknown' ? analysis.projectType : structureAnalysis.projectType,
-      complexity: Math.max(analysis.complexity, structureAnalysis.complexity)
-    };
+    return await this.aiAnalysisService.analyzeProject(claudeMdPath);
   }
 
   /**
-   * Parse CLAUDE.md file content
+   * Legacy wrapper - now uses AI analysis service
+   * @deprecated Parsing is now handled by AI analysis service
    */
   private parseClaudeMd(content: string): ProjectAnalysis {
-    const analysis: ProjectAnalysis = {
-      projectType: 'unknown',
-      technologies: [],
-      frameworks: [],
-      complexity: 5,
-      phase: 'development',
-      teamSize: 5,
-      description: '',
-      goals: [],
-      requirements: []
-    };
-
-    // Extract description (first paragraph or # title)
-    const descMatch = content.match(/^#\s+(.+)$/m) || content.match(/^(.+)$/m);
-    if (descMatch) {
-      analysis.description = descMatch[1].trim();
-    }
-
-    // Detect technologies and frameworks from content
-    const techKeywords = {
-      'React': ['react', 'jsx', 'tsx'],
-      'Vue': ['vue', 'vue.js'],
-      'Angular': ['angular', '@angular'],
-      'Node.js': ['node', 'nodejs', 'node.js', 'express'],
-      'TypeScript': ['typescript', 'ts', '.ts'],
-      'JavaScript': ['javascript', 'js'],
-      'Python': ['python', 'django', 'flask', 'fastapi'],
-      'Java': ['java', 'spring', 'spring boot'],
-      'Docker': ['docker', 'container'],
-      'PostgreSQL': ['postgresql', 'postgres'],
-      'MongoDB': ['mongodb', 'mongo'],
-      'Redis': ['redis'],
-      'AWS': ['aws', 'amazon web services'],
-      'GraphQL': ['graphql'],
-      'REST': ['rest', 'restful', 'api'],
-      'Machine Learning': ['ml', 'machine learning', 'ai', 'tensorflow', 'pytorch'],
-      'Mobile': ['mobile', 'ios', 'android', 'react native', 'flutter']
-    };
-
-    const contentLower = content.toLowerCase();
-    
-    for (const [tech, keywords] of Object.entries(techKeywords)) {
-      if (keywords.some(keyword => contentLower.includes(keyword))) {
-        if (['React', 'Vue', 'Angular'].includes(tech)) {
-          analysis.frameworks.push(tech);
-        } else {
-          analysis.technologies.push(tech);
-        }
-      }
-    }
-
-    // Determine project type
-    if (analysis.frameworks.some(f => ['React', 'Vue', 'Angular'].includes(f))) {
-      analysis.projectType = 'web-frontend';
-    } else if (analysis.technologies.includes('Node.js') || analysis.technologies.includes('Python')) {
-      analysis.projectType = 'web-backend';
-    } else if (analysis.technologies.includes('Mobile')) {
-      analysis.projectType = 'mobile';
-    } else if (analysis.technologies.includes('Machine Learning')) {
-      analysis.projectType = 'data-science';
-    } else if (contentLower.includes('api') || contentLower.includes('server')) {
-      analysis.projectType = 'api';
-    } else if (contentLower.includes('cli') || contentLower.includes('command')) {
-      analysis.projectType = 'cli-tool';
-    }
-
-    // Estimate complexity
-    let complexityScore = 5;
-    if (analysis.technologies.length > 5) complexityScore += 2;
-    if (analysis.frameworks.length > 1) complexityScore += 1;
-    if (contentLower.includes('microservice') || contentLower.includes('enterprise')) complexityScore += 3;
-    if (contentLower.includes('machine learning') || contentLower.includes('ai')) complexityScore += 2;
-    
-    analysis.complexity = Math.min(10, complexityScore);
-
-    return analysis;
+    // This method is now deprecated - the AI analysis service handles all parsing
+    throw new Error('parseClaudeMd is deprecated - use AI analysis service instead');
   }
 
   /**
-   * Analyze project structure from filesystem
+   * Legacy wrapper - now uses AI analysis service  
+   * @deprecated Project structure analysis is now handled by AI analysis service
    */
   private async analyzeProjectStructure(): Promise<ProjectAnalysis> {
-    const analysis: ProjectAnalysis = {
-      projectType: 'unknown',
-      technologies: [],
-      frameworks: [],
-      complexity: 5,
-      phase: 'development',
-      teamSize: 5
-    };
-
-    try {
-      // Check package.json
-      if (fs.existsSync('package.json')) {
-        const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-        
-        // Extract technologies from dependencies
-        const allDeps = {
-          ...packageJson.dependencies,
-          ...packageJson.devDependencies
-        };
-
-        Object.keys(allDeps).forEach(dep => {
-          if (dep.includes('react')) analysis.frameworks.push('React');
-          if (dep.includes('vue')) analysis.frameworks.push('Vue');
-          if (dep.includes('angular')) analysis.frameworks.push('Angular');
-          if (dep.includes('express')) analysis.technologies.push('Node.js');
-          if (dep.includes('typescript')) analysis.technologies.push('TypeScript');
-          if (dep.includes('graphql')) analysis.technologies.push('GraphQL');
-          if (dep.includes('postgres')) analysis.technologies.push('PostgreSQL');
-          if (dep.includes('mongo')) analysis.technologies.push('MongoDB');
-          if (dep.includes('redis')) analysis.technologies.push('Redis');
-        });
-
-        analysis.projectType = 'web-application';
-      }
-
-      // Check Python files
-      if (fs.existsSync('requirements.txt') || fs.existsSync('pyproject.toml')) {
-        analysis.technologies.push('Python');
-        analysis.projectType = 'python-application';
-      }
-
-      // Check Dockerfile
-      if (fs.existsSync('Dockerfile')) {
-        analysis.technologies.push('Docker');
-        analysis.complexity += 1;
-      }
-
-      // Check for mobile development
-      if (fs.existsSync('android') || fs.existsSync('ios')) {
-        analysis.projectType = 'mobile';
-        analysis.technologies.push('Mobile');
-      }
-
-    } catch (error) {
-      console.warn(`Error analyzing project structure: ${error}`);
-    }
-
-    return analysis;
+    // This method is now deprecated - the AI analysis service handles all project structure analysis
+    throw new Error('analyzeProjectStructure is deprecated - use AI analysis service instead');
   }
 
   /**
-   * Generate agent recommendations based on project analysis
+   * Legacy wrapper - now uses AI analysis service
+   * @deprecated Use aiAnalysisService.generateRecommendations directly
    */
   private async generateRecommendations(analysis: ProjectAnalysis): Promise<AgentRecommendation[]> {
-    const recommendations: AgentRecommendation[] = [];
-
-    // Define agent scoring rules
-    const agentRules = [
-      // Web Frontend
-      {
-        name: 'frontend-developer',
-        condition: () => analysis.frameworks.includes('React') || analysis.frameworks.includes('Vue') || analysis.frameworks.includes('Angular'),
-        score: 95,
-        category: 'development',
-        priority: 'essential' as const,
-        reasoning: 'Essential for frontend framework development'
-      },
-      {
-        name: 'ui-designer', 
-        condition: () => analysis.projectType.includes('web') || analysis.projectType.includes('mobile'),
-        score: 80,
-        category: 'design',
-        priority: 'recommended' as const,
-        reasoning: 'Important for user interface design'
-      },
-
-      // Backend
-      {
-        name: 'backend-engineer',
-        condition: () => analysis.technologies.includes('Node.js') || analysis.technologies.includes('Python') || analysis.projectType.includes('backend'),
-        score: 95,
-        category: 'development', 
-        priority: 'essential' as const,
-        reasoning: 'Essential for backend development and APIs'
-      },
-
-      // Full-stack
-      {
-        name: 'full-stack-developer',
-        condition: () => analysis.frameworks.length > 0 && (analysis.technologies.includes('Node.js') || analysis.technologies.includes('Python')),
-        score: 90,
-        category: 'development',
-        priority: 'essential' as const,
-        reasoning: 'Perfect for full-stack web applications'
-      },
-
-      // DevOps
-      {
-        name: 'devops-engineer',
-        condition: () => analysis.technologies.includes('Docker') || analysis.complexity > 7,
-        score: 85,
-        category: 'infrastructure',
-        priority: 'recommended' as const,
-        reasoning: 'Required for deployment and infrastructure'
-      },
-
-      // QA
-      {
-        name: 'qa-engineer',
-        condition: () => analysis.complexity > 5,
-        score: 75,
-        category: 'quality',
-        priority: 'recommended' as const,
-        reasoning: 'Important for quality assurance'
-      },
-
-      // Security
-      {
-        name: 'security-engineer',
-        condition: () => analysis.projectType.includes('web') || analysis.complexity > 8,
-        score: 80,
-        category: 'security',
-        priority: 'recommended' as const,
-        reasoning: 'Critical for secure applications'
-      },
-
-      // Mobile
-      {
-        name: 'mobile-developer',
-        condition: () => analysis.projectType === 'mobile' || analysis.technologies.includes('Mobile'),
-        score: 95,
-        category: 'development',
-        priority: 'essential' as const,
-        reasoning: 'Essential for mobile app development'
-      },
-
-      // Data Science
-      {
-        name: 'data-scientist',
-        condition: () => analysis.technologies.includes('Machine Learning') || analysis.projectType === 'data-science',
-        score: 95,
-        category: 'data',
-        priority: 'essential' as const,
-        reasoning: 'Essential for ML and data science projects'
-      },
-
-      // Management
-      {
-        name: 'tech-lead',
-        condition: () => analysis.complexity > 6 || analysis.technologies.length > 3,
-        score: 85,
-        category: 'management',
-        priority: 'recommended' as const,
-        reasoning: 'Needed for technical leadership in complex projects'
-      },
-
-      {
-        name: 'product-manager',
-        condition: () => analysis.projectType.includes('web') || analysis.projectType.includes('mobile'),
-        score: 70,
-        category: 'management',
-        priority: 'optional' as const,
-        reasoning: 'Valuable for product strategy and roadmap'
-      },
-
-      // Documentation
-      {
-        name: 'technical-writer',
-        condition: () => analysis.complexity > 5,
-        score: 65,
-        category: 'documentation',
-        priority: 'optional' as const,
-        reasoning: 'Important for documentation and user guides'
-      }
-    ];
-
-    // Apply rules and generate recommendations
-    for (const rule of agentRules) {
-      if (rule.condition()) {
-        // Try to load agent details
-        const agentDetails = await this.loadAgentDetails(rule.name, 'en');
-        
-        recommendations.push({
-          name: rule.name,
-          description: agentDetails?.description || `${rule.name} specialist`,
-          relevanceScore: rule.score,
-          reasoning: rule.reasoning,
-          tools: agentDetails?.tools || ['Read', 'Write'],
-          category: rule.category,
-          priority: rule.priority
-        });
-      }
-    }
-
-    return recommendations;
+    return await this.aiAnalysisService.generateRecommendations(analysis);
   }
 
   /**
@@ -556,14 +244,14 @@ ${body.split('\n').map(line => `  ${line}`).join('\n')}
   }
 
   /**
-   * Create README file with usage instructions
+   * Create README file with enhanced AI analysis information
    */
   private async createReadme(recommendations: AgentRecommendation[], options: DownloadOptions): Promise<void> {
     const readmePath = path.join(options.targetDir, 'README.md');
 
-    const content = `# 🤖 Downloaded Agents
+    const content = `# 🤖 AI-Recommended Agents
 
-This directory contains ${recommendations.length} agents recommended for your project.
+This directory contains ${recommendations.length} agents intelligently recommended for your project using AI analysis.
 
 ## 📋 Agent Summary
 
@@ -581,21 +269,21 @@ Each agent can be activated by referencing their expertise:
 "${recommendations[0]?.name} 에이전트를 활용해서 [specific task]를 해줘"
 \`\`\`
 
-## 📊 Recommendations by Priority
+## 📊 AI-Generated Recommendations by Priority
 
 ### ⭐ Essential (${recommendations.filter(r => r.priority === 'essential').length})
 ${recommendations.filter(r => r.priority === 'essential').map(r => 
-  `- **${r.name}**: ${r.reasoning}`
+  `- **${r.name}**: ${r.reasoning}${r.specificTasks ? '\n  - Tasks: ' + r.specificTasks.join(', ') : ''}`
 ).join('\n')}
 
 ### 🔧 Recommended (${recommendations.filter(r => r.priority === 'recommended').length})
 ${recommendations.filter(r => r.priority === 'recommended').map(r => 
-  `- **${r.name}**: ${r.reasoning}`
+  `- **${r.name}**: ${r.reasoning}${r.specificTasks ? '\n  - Tasks: ' + r.specificTasks.join(', ') : ''}`
 ).join('\n')}
 
 ### 💡 Optional (${recommendations.filter(r => r.priority === 'optional').length})
 ${recommendations.filter(r => r.priority === 'optional').map(r => 
-  `- **${r.name}**: ${r.reasoning}`
+  `- **${r.name}**: ${r.reasoning}${r.specificTasks ? '\n  - Tasks: ' + r.specificTasks.join(', ') : ''}`
 ).join('\n')}
 
 ## 🚀 Getting Started
@@ -605,7 +293,15 @@ ${recommendations.filter(r => r.priority === 'optional').map(r =>
 3. **Add Specialists**: Include recommended agents based on specific project needs
 4. **Customize as Needed**: Modify agent instructions for your specific requirements
 
-Generated by claude-agents-power v${this.getVersion()} on ${new Date().toISOString()}
+## 🧠 AI Analysis Features
+
+This recommendation was generated using:
+- **Intelligent Project Analysis**: AI-powered understanding of your project structure and requirements
+- **Context-Aware Recommendations**: Agent suggestions based on comprehensive project context
+- **Dynamic Prioritization**: Smart priority assignment based on project needs and complexity
+- **Task-Specific Matching**: Agents matched to specific tasks and integration points
+
+Generated by claude-agents-power v${this.getVersion()} (AI-Powered) on ${new Date().toISOString()}
 `;
 
     fs.writeFileSync(readmePath, content);

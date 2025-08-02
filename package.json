@@ -17,6 +17,7 @@
   "files": [
     "dist/",
     "claude/agents/",
+    "claude-slash-commands/",
     "README.md",
     "README.kr.md",
     "LICENSE"

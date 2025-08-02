@@ -12,6 +12,7 @@ import { dirname } from 'path';
 import fs from 'fs';
 import os from 'os';
 import dotenv from 'dotenv';
+import { AgentDownloader } from './agentDownloader.js';
 // ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,6 +31,7 @@ catch (error) {
 // Check for slash commands flags first (manual parsing to avoid commander issues)
 const hasInstallSlashCommands = process.argv.includes('--install-slash-commands');
 const hasUninstallSlashCommands = process.argv.includes('--uninstall-slash-commands');
+const hasAgentDownload = process.argv.includes('--agent-download');
 // Parse CLI arguments using commander
 const program = new Command()
     .option('--transport <stdio>', 'transport type', 'stdio')
@@ -37,8 +39,8 @@ const program = new Command()
     .option('--install', 'install MCP configuration to Claude Desktop')
     .option('--install-slash-commands', 'install slash commands to Claude Code')
     .option('--uninstall-slash-commands', 'uninstall slash commands from Claude Code')
+    .option('--agent-download', 'download recommended agents for current project')
     .allowUnknownOption() // let MCP Inspector / other wrappers pass through extra flags
-    .allowExcessArguments(false) // don't allow extra arguments
     .parse(process.argv);
 const cliOptions = program.opts();
 // Override with manual parsing results
@@ -47,6 +49,9 @@ if (hasInstallSlashCommands) {
 }
 if (hasUninstallSlashCommands) {
     cliOptions.uninstallSlashCommands = true;
+}
+if (hasAgentDownload) {
+    cliOptions.agentDownload = true;
 }
 // Handle --install flag
 if (cliOptions.install) {
@@ -220,6 +225,100 @@ if (cliOptions.uninstallSlashCommands) {
     }
     catch (error) {
         console.error('❌ Uninstallation failed:', error);
+        process.exit(1);
+    }
+    process.exit(0);
+}
+// Handle --agent-download flag
+if (cliOptions.agentDownload) {
+    console.log('🤖 Claude Agents Power - Agent Downloader\n');
+    try {
+        const downloader = new AgentDownloader();
+        // Parse additional command line arguments for agent download
+        const args = process.argv.slice(2);
+        const options = {
+            targetDir: './agents',
+            claudeMdPath: './CLAUDE.md',
+            format: 'md',
+            language: 'en',
+            limit: 10,
+            dryRun: false,
+            overwrite: false
+        };
+        // Parse agent download specific flags
+        for (let i = 0; i < args.length; i++) {
+            const arg = args[i];
+            const nextArg = args[i + 1];
+            if (arg === '--target-dir' && nextArg) {
+                options.targetDir = nextArg;
+                i++;
+            }
+            else if (arg === '--claude-md' && nextArg) {
+                options.claudeMdPath = nextArg;
+                i++;
+            }
+            else if (arg === '--format' && nextArg) {
+                options.format = nextArg;
+                i++;
+            }
+            else if (arg === '--language' && nextArg) {
+                options.language = nextArg;
+                i++;
+            }
+            else if (arg === '--limit' && nextArg) {
+                options.limit = parseInt(nextArg);
+                i++;
+            }
+            else if (arg === '--dry-run') {
+                options.dryRun = true;
+            }
+            else if (arg === '--overwrite') {
+                options.overwrite = true;
+            }
+        }
+        console.log('🔍 Analyzing project...');
+        const result = await downloader.downloadAgents(options);
+        // Display analysis results
+        console.log('\n🎯 Project Analysis Results:');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log(`📊 Project Type: ${result.analysis.projectType}`);
+        console.log(`🛠️ Technologies: ${result.analysis.technologies.join(', ') || 'None detected'}`);
+        console.log(`📚 Frameworks: ${result.analysis.frameworks.join(', ') || 'None detected'}`);
+        console.log(`📈 Complexity: ${result.analysis.complexity}/10`);
+        console.log(`👥 Recommended Team Size: ${result.analysis.teamSize} agents`);
+        if (result.analysis.description) {
+            console.log(`📝 Description: ${result.analysis.description}`);
+        }
+        console.log('\n🏆 Top Recommendations:');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        result.recommendations.forEach((rec, index) => {
+            const icon = rec.priority === 'essential' ? '⭐' :
+                rec.priority === 'recommended' ? '🔧' : '💡';
+            console.log(`${index + 1}. ${icon} ${rec.name} (${rec.relevanceScore}% match)`);
+            console.log(`   └─ ${rec.reasoning}`);
+        });
+        if (options.dryRun) {
+            console.log('\n💡 This was a dry run. Use without --dry-run to download agents.');
+        }
+        else if (result.downloaded && result.downloaded.length > 0) {
+            console.log('\n📥 Downloaded Agents:');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            result.downloaded.forEach(filePath => {
+                const fileName = path.basename(filePath);
+                const fileSize = fs.statSync(filePath).size;
+                const fileSizeKB = (fileSize / 1024).toFixed(1);
+                console.log(`✅ ${fileName.padEnd(25)} (${fileSizeKB}KB)`);
+            });
+            console.log('\n📊 Summary:');
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log(`✅ ${result.downloaded.length} agents downloaded successfully`);
+            console.log(`📁 Files saved to: ${options.targetDir}`);
+            console.log(`📋 README.md created with usage guide`);
+            console.log(`💡 Next: Try using agents in your development workflow`);
+        }
+    }
+    catch (error) {
+        console.error('❌ Agent download failed:', error);
         process.exit(1);
     }
     process.exit(0);

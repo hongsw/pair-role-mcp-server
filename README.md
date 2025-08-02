@@ -491,6 +491,15 @@ Check system version and status
 /agents:version --check-updates    # Check for updates
 ```
 
+#### `/agent-download [--flags]` ⭐ **NEW!**
+Automatically analyze project and download recommended agents
+```
+/agent-download                                    # Auto-analyze and download
+/agent-download --target-dir ./team --limit 5     # Custom directory and limit
+/agent-download --dry-run                          # Preview only
+/agent-download --language ko --format yaml       # Korean agents in YAML format
+```
+
 ### 🗑️ Uninstallation
 
 Remove slash commands:

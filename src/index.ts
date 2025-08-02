@@ -36,6 +36,10 @@ try {
   console.error('[MCP Sub-Agents] Could not read package.json version:', error);
 }
 
+// Check for slash commands flags first (manual parsing to avoid commander issues)
+const hasInstallSlashCommands = process.argv.includes('--install-slash-commands');
+const hasUninstallSlashCommands = process.argv.includes('--uninstall-slash-commands');
+
 // Parse CLI arguments using commander
 const program = new Command()
   .option('--transport <stdio>', 'transport type', 'stdio')
@@ -44,6 +48,7 @@ const program = new Command()
   .option('--install-slash-commands', 'install slash commands to Claude Code')
   .option('--uninstall-slash-commands', 'uninstall slash commands from Claude Code')
   .allowUnknownOption() // let MCP Inspector / other wrappers pass through extra flags
+  .allowExcessArguments(false) // don't allow extra arguments
   .parse(process.argv);
 
 const cliOptions = program.opts<{
@@ -53,6 +58,14 @@ const cliOptions = program.opts<{
   installSlashCommands?: boolean;
   uninstallSlashCommands?: boolean;
 }>();
+
+// Override with manual parsing results
+if (hasInstallSlashCommands) {
+  cliOptions.installSlashCommands = true;
+}
+if (hasUninstallSlashCommands) {
+  cliOptions.uninstallSlashCommands = true;
+}
 
 // Handle --install flag
 if (cliOptions.install) {
